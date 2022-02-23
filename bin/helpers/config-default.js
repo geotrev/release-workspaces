@@ -4,13 +4,14 @@ export const configDefault = {
     rangePrefix: "^",
   },
   hooks: {
-    preincrement: "",
-    postincrement: "",
+    prepublish: "",
+    postpublish: "",
     precommit: "",
     postcommit: "",
   },
   npm: {
     increment: true,
+    publish: true,
   },
   git: {
     commitMessage: "Release ${version}",

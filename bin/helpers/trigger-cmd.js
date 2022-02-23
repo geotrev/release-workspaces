@@ -14,6 +14,7 @@ export async function triggerCmd(meta, reporter = defaultReporter) {
     try {
       await exec(meta.cmd)
     } catch (e) {
+      /* eslint-disable-next-line no-console */
       console.error(`Erroring running '${meta.cmd}':`, e)
       reporter.fail(`Unable to complete: ${meta.step}`)
     }

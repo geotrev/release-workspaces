@@ -9,10 +9,8 @@ import { ROOT_PACKAGE_FILE } from "./helpers/constants.js"
 function incrementDependencies(args, config, entry) {
   pkgReporter.start("Increment co-dependencies")
 
-  let failures = null
   const { getPackage, dir } = entry
   const pkgContent = getPackage()
-  const scope = entry.name.split("/")[0]
   const dependencies = []
   const rangePrefix = config.increment.rangePrefix
   const types = [
@@ -32,11 +30,11 @@ function incrementDependencies(args, config, entry) {
   })
 
   if (dependencies.length) {
-    failures = false
-
     dependencies.forEach(({ type, packageNames }) => {
       packageNames
-        .filter((name) => name.startsWith(scope))
+        .filter((name) =>
+          config.packageNames.some((pkgName) => pkgName === name)
+        )
         .forEach((name) => {
           pkgContent[type][name] = `${rangePrefix}${pkgContent.version}`
         })
@@ -55,18 +53,13 @@ function incrementDependencies(args, config, entry) {
           "utf8"
         )
       } catch (e) {
-        failures = true
         /* eslint-disable-next-line no-console */
         console.error("Error:", e)
+        reporter.fail(`Something went wrong updating package.json`)
+        process.exit(1)
       }
     }
-  }
 
-  if (failures) {
-    reporter.fail(
-      "package.json missing: " + path.resolve(dir, ROOT_PACKAGE_FILE)
-    )
-  } else if (failures === false) {
     pkgReporter.succeed("Co-dependencies updated")
   } else {
     pkgReporter.succeed("No co-dependencies detected")
@@ -76,7 +69,6 @@ function incrementDependencies(args, config, entry) {
 export async function version(args, config, entry, newVersion) {
   pkgReporter.start(`Bump ${entry.name} to v${newVersion}`)
 
-  let failures = false
   const incCommand = `npm version -w ${entry.name} ${newVersion} --no-git-tag-version`
 
   if (args.dryRun) {
@@ -85,9 +77,10 @@ export async function version(args, config, entry, newVersion) {
     try {
       await exec(incCommand)
     } catch (e) {
-      failures = true
       /* eslint-disable-next-line no-console */
       console.error("Error", e)
+      reporter.fail("Something went wrong while versioning")
+      process.exit(1)
     }
   }
 
@@ -95,13 +88,5 @@ export async function version(args, config, entry, newVersion) {
     incrementDependencies(args, config, entry)
   }
 
-  if (failures) {
-    reporter.fail(
-      `Something went wrong bumping ${entry.name} to v${newVersion}`
-    )
-    return false
-  } else {
-    pkgReporter.succeed("Version successful")
-    return true
-  }
+  pkgReporter.succeed("Version successful")
 }

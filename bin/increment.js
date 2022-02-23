@@ -6,7 +6,6 @@ import { version } from "./version.js"
 import { publish } from "./publish.js"
 
 export async function increment(args, config) {
-  let failures = false
   const packages = config.packages
   const length = packages.length
 
@@ -33,25 +32,14 @@ export async function increment(args, config) {
       symbol: "📦",
     })
 
-    const versioned = await version(args, config, entry, newVersion)
-    let published
+    if (config.npm.increment) {
+      await version(args, config, entry, newVersion)
+    }
 
-    if (versioned) {
-      published = await publish(args, entry)
-
-      if (!published) {
-        failures = true
-      }
-    } else {
-      failures = true
+    if (config.npm.publish) {
+      await publish(args, entry)
     }
   }
 
-  if (failures) {
-    reporter.warn(
-      "Some packages weren't published. You might need to fix something and re-release."
-    )
-  } else {
-    reporter.succeed("All packages published without errors")
-  }
+  reporter.succeed("All packages versioned/published without errors")
 }

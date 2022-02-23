@@ -17,7 +17,7 @@ export async function release(userArgs, userConfig) {
 
   // Increment version and publish to npm
 
-  if (npm.increment) {
+  if (npm.increment || npm.publish) {
     if (preincrement) {
       await triggerCmd({
         args,
@@ -39,7 +39,7 @@ export async function release(userArgs, userConfig) {
 
   // Commit changes and push to origin
 
-  if (git.commit) {
+  if (git.commit || git.tag) {
     if (precommit) {
       await triggerCmd({ args, cmd: precommit, step: "Precommit" })
     }

@@ -23,19 +23,22 @@ Default values denoted after each field.
 
 ```js
 {
+  // Defines how codependent monorepo packages are versioned during a release
   "increment": {
-    // Ensures packages within the monorepo have the correct version before publishing
+    // If false, will not bump codependent package versions.
     "codependencies": true,
 
-    // Range prefix for codependencies
+    // Range prefix to use when incrementing codependent packages
     "rangePrefix": "^"
   },
-  "hooks": {
-    // Runs before packages are versioned and published
-    "preincrement": "",
 
-    // Runs after packages are versioned and published
-    "postincrement": "",
+  // Defines scripts during release-workspaces execution lifecycle
+  "hooks": {
+    // Runs before all packages are versioned and published.
+    "prepublish": "",
+
+    // Runs after all packages are versioned and published
+    "postpublish": "",
 
     // Runs before the release commit is created
     "precommit": "",
@@ -43,6 +46,8 @@ Default values denoted after each field.
     // Runs after the release commit is created
     "postcommit": ""
   },
+
+  // Controls version and publish behavior
   "npm": {
     // If false, does not increment the version
     "increment": true,
@@ -51,6 +56,8 @@ Default values denoted after each field.
     // NOTE: If `increment` is false, the tool will still attempt to publish
     "publish": true
   },
+
+  // Controls the commit and tag behavior
   "git": {
     // The commit message for the release commit
     "commitMessage": "Release ${version}",

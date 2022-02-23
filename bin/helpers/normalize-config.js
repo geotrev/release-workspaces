@@ -132,6 +132,7 @@ export function normalizeConfig(args, userConfig) {
 
   // Create new entries for each package to release
   config.packages = packageRoots.map(createPackageMeta)
+  config.packageNames = config.packages.map((pkg) => pkg.name)
 
   // Validate packages are within the current repo root
   for (const pkg of config.packages) {

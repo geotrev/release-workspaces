@@ -3,20 +3,26 @@
 import { triggerCmd } from "./helpers/trigger-cmd.js"
 
 export async function commit(args, config) {
-  const { commitMessage, tagMessage, tag: shouldTag } = config.git
+  const {
+    commitMessage,
+    tagMessage,
+    tag: shouldTag,
+    commit: shouldCommit,
+  } = config.git
   const VERSION_INSERT = "${version}"
-  const commitMsg =
-    commitMessage.indexOf(VERSION_INSERT) > -1
-      ? commitMessage.replace(VERSION_INSERT, config.releaseVersion)
-      : commitMessage
-  const commitCmd = `git commit -m '${commitMsg}'`
-  const pushCmd = "git push --follow-tags"
 
-  await triggerCmd({
-    args,
-    cmd: commitCmd,
-    step: "Commit",
-  })
+  if (shouldCommit) {
+    const commitMsg =
+      commitMessage.indexOf(VERSION_INSERT) > -1
+        ? commitMessage.replace(VERSION_INSERT, config.releaseVersion)
+        : commitMessage
+    const commitCmd = `git commit -m '${commitMsg}'`
+    await triggerCmd({
+      args,
+      cmd: commitCmd,
+      step: "Commit",
+    })
+  }
 
   if (shouldTag) {
     const tagMsg =
@@ -32,9 +38,12 @@ export async function commit(args, config) {
     })
   }
 
-  await triggerCmd({
-    args,
-    cmd: pushCmd,
-    step: "Push",
-  })
+  if (shouldTag || shouldCommit) {
+    const pushCmd = "git push --follow-tags"
+    await triggerCmd({
+      args,
+      cmd: pushCmd,
+      step: "Push",
+    })
+  }
 }

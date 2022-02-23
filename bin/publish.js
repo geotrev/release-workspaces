@@ -6,7 +6,6 @@ import { reporter, pkgReporter } from "./helpers/reporter.js"
 export async function publish(args, entry) {
   pkgReporter.start(`Publish ${entry.name}`)
 
-  let failures = false
   const pubTag = args.npmTag || args.preid || "latest"
   const pubCommand = `npm publish -w ${entry.name} --tag ${pubTag}`
   const addChangesCommand = "git add . -u"
@@ -19,17 +18,12 @@ export async function publish(args, entry) {
       await exec(addChangesCommand)
       await exec(pubCommand)
     } catch (e) {
-      failures = true
       /* eslint-disable-next-line no-console */
       console.error("Error:", e)
+      reporter.fail(`Something went wrong releasing ${entry.name}`)
+      process.exit(1)
     }
   }
 
-  if (failures) {
-    reporter.fail(`Something went wrong releasing ${entry.name}`)
-    return false
-  } else {
-    pkgReporter.succeed("Publish successful")
-    return true
-  }
+  pkgReporter.succeed("Publish successful")
 }
