@@ -3,19 +3,10 @@
   "clearMocks": true,
   "restoreMocks": true,
   "verbose": true,
-  "testMatch": ["<rootDir>/packages/*/src/__tests__/**/*.spec.js"],
+  "testMatch": ["<rootDir>/__tests__/**/*.spec.js"],
   "testURL": "http://localhost/",
   "transform": {
     "\\.js$": "babel-jest"
   },
-  "testEnvironment": "jsdom",
-  "globals": {
-    "BUILD_ENV": "development"
-  },
-  "moduleNameMapper": {
-    "^@bulba/element$": "<rootDir>/packages/element/src",
-    "^@bulba/jsx$": "<rootDir>/packages/jsx/src",
-    "^@bulba/template$": "<rootDir>/packages/template/src",
-    "^@bulba/utils$": "<rootDir>/packages/utils/src"
-  }
+  "testEnvironment": "node"
 }

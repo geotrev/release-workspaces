@@ -3,10 +3,8 @@
 <br>
 <p align="center">
   <a href="https://www.npmjs.com/package/release-workspaces"><img src="https://img.shields.io/npm/v/release-workspaces.svg?sanitize=true&style=flat-square" alt="Version"></a>
-  <a href="https://github.com/geotrev/bulba/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/release-workspaces.svg?sanitize=true&style=flat-square" alt="License"></a>
-  <a href="https://github.com/geotrev/bulba/actions/workflows/test.yml?query=branch%3Amain"><img src="https://badgen.net/github/checks/geotrev/bulba/main?style=flat-square" alt="CI status" /></a>
-  <a href="https://bundlephobia.com/package/release-workspaces"><img src="https://badgen.net/bundlephobia/minzip/release-workspaces?style=flat-square" alt="bundle size" /></a>
-  <a href="https://www.libraries.io/npm/release-workspaces"><img src="https://img.shields.io/librariesio/release/npm/release-workspaces" alt="dependency status" /></a>
+  <a href="https://github.com/geotrev/release-workspaces/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/release-workspaces.svg?sanitize=true&style=flat-square" alt="License"></a>
+  <a href="https://github.com/geotrev/release-workspaces/actions/workflows/test.yml?query=branch%3Amain"><img src="https://badgen.net/github/checks/geotrev/release-workspaces/main?style=flat-square" alt="CI status" /></a>
 </p>
 
 ### Why
