@@ -25,6 +25,12 @@ export function getArgs() {
       type: "string",
       describe: "The semver target.",
     })
+    .option("prerelease", {
+      alias: "r",
+      default: false,
+      type: "boolean",
+      describe: "If given, increments existing prerelease version",
+    })
     .option("preid", {
       alias: "p",
       type: "string",

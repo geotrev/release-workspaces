@@ -16,9 +16,7 @@ export async function increment(args, config) {
 
     // Get new version
 
-    const newVersion = args.preid
-      ? semver.inc(pkgContent.version, args.target || "prerelease", args.preid)
-      : semver.inc(pkgContent.version, args.target, args.preid)
+    const newVersion = semver.inc(pkgContent.version, args.target, args.preid)
 
     if (!newVersion) {
       reporter.fail("Invalid target version requested")

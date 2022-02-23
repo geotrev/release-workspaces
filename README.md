@@ -1,13 +1,12 @@
 <h2 align="center">release-workspaces</h2>
-<p align="center">Automated versioning and publishing of workspaces; similar to release-it, but for workspace monorepos. Use it in the <a href="#cli">command line</a> or via <a href="#functional-utility">async function</a>. The tool intuitively works with existing npm verison/publish lifecycle hooks.</p>
-<br>
+<p align="center">Automated versioning and publishing of workspaces; similar to release-it, but for monorepos. Use it in the <a href="#cli">command line</a> or via <a href="#functional-utility">async function</a>. The tool intuitively works with existing npm verison/publish lifecycle hooks.</p>
 <p align="center">
   <a href="https://www.npmjs.com/package/release-workspaces"><img src="https://img.shields.io/npm/v/release-workspaces.svg?sanitize=true&style=flat-square" alt="Version"></a>
   <a href="https://github.com/geotrev/release-workspaces/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/release-workspaces.svg?sanitize=true&style=flat-square" alt="License"></a>
   <a href="https://github.com/geotrev/release-workspaces/actions/workflows/test.yml?query=branch%3Amain"><img src="https://badgen.net/github/checks/geotrev/release-workspaces/main?style=flat-square" alt="CI status" /></a>
 </p>
 
-### Why
+## Why
 
 There's many awesome tools to automate publishing npm packages. The problem is that they're either deprecated/retired, suited specifically for singular packages and therefore become brittle in a monorepo context, or bring along additional tooling that is unnecessary for owners looking to simply automate the versioning + publishing process.
 
@@ -15,7 +14,11 @@ There's many awesome tools to automate publishing npm packages. The problem is t
 
 While the tool runs with sensible defaults, you can create a configuration of your own with the following options/overrides.
 
-You can define a configuration in a few weeks. Add a `.release-workspaces.json` file or a `release-workspaces` field in your `package.json`
+Define the config file one of few ways:
+
+- `.release-workspaces.json` file in monorepo root
+- `"release-workspaces"` field of package.json
+- `--config` CLI option for a custom JSON file path
 
 ### Options
 
@@ -79,30 +82,39 @@ If you need to run a package-specific npm lifecycle script such as `preversion` 
 
 ## CLI
 
-The only required option for the tool is `target`, which should be any valid semver increment.
+Version and publish your packages through the CLI.
+
+Arguments passed through the CLI will be passed verbatim to and validated by [semver](https://www.npmjs.com/package/semver) (`semver.inc`, specifically) under the hood. This works great from both an implementation and user experience perspective, as it mirrors 1:1 how npm handles versioning, anyway, and fails naturally if a combination of arguments is invalid (e.g., no `--target` flag is given)
+
+### Core Options
+
+| Name           | Alias | Type    | Required | Description                                                                        |
+| -------------- | ----- | ------- | -------- | ---------------------------------------------------------------------------------- |
+| `--target`     | `t`   | string  | Y        | The target semver increment. E.g. `minor`, `prepatch`, etc.                        |
+| `--preid`      | `p`   | string  | N        | If given, will set the version as a prerelease. E.g. `alpha`, `rc`, etc.           |
+| `--prerelease` | `r`   | boolean | N        | If given, will increment an existing prerelease. E.g. `-rc.0` -> `-rc.1`.          |
+| `--npm-tag`    | `n`   | string  | N        | If given, sets the npm tag. Otherwise uses the `preid`. E.g. `next`.               |
+| `--config`     | `c`   | string  | N        | Define a custom file path and/or name.                                             |
+| `--dry-run`    | `d`   | boolean | N        | If given, prints commands configured to run by the tool, but doesn't execute them. |
+| `--verbose`    |       | boolean | N        | Like `dry-run`, but runs all commands                                              |
 
 Simple example:
 
 ```sh
-$ release-workspaces --target minor
+# 1.5.0 -> 2.0.0
+$ release-workspaces --target major
 ```
 
 Complex example:
 
 ```sh
-$ release-workspaces --config path/to/my-config.json --target preminor --preid rc --npm-tag next
+# 1.5.0 -> 2.0.0-rc.0 (@next)
+$ release-workspaces --config path/to/my-config.json --target premajor --preid rc --npm-tag next
 ```
 
-### Flags
+### Config Options
 
-| Name        | Alias | Required | Description                                                                                                                                  |
-| ----------- | ----- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--config`  | `c`   | N        | Define a custom file path and/or name.                                                                                                       |
-| `--target`  | `t`   | Y        | The target semver increment. E.g. `minor`, `prepatch`, etc.                                                                                  |
-| `--preid`   | `p`   | N        | If given, will set the version as a prerelease. E.g. `alpha`, `rc`, etc.                                                                     |
-| `--npm-tag` | `n`   | N        | If given, sets the npm tag. Otherwise uses the `preid`. E.g. `next`.                                                                         |
-| `--dry-run` | `d`   | N        | If given, prints commands the tool would run given a user's current configuration, and packages that would be updated, but doesn't run them. |
-| `--verbose` |       | N        | Like `dry-run`, but actually runs all commands                                                                                               |
+Instead of defining a config file, you can instead use CLI flag equivalents.
 
 ## Functional Utility
 
@@ -141,6 +153,18 @@ const config = {
 await release(options, config)
 
 /* do some more stuff */
+```
+
+## Examples
+
+Here's a straightforward example of versioning and publishing your workspace packages from prerelease to release candidate (rc) to final.
+
+```sh
+# Starting version: 0.1.0
+$ release-workspaces --target preminor --preid alpha # 0.2.0-alpha.0
+$ release-workspaces --target prerelease # 0.2.0-alpha.1
+$ release-workspaces --target prerelease --preid rc --npm-tag next # 0.2.0-rc.0 (using 'next' npm tag)
+$ release-workspaces --target minor # 0.2.0
 ```
 
 ## Roadmap

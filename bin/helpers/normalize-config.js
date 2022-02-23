@@ -55,7 +55,7 @@ function normalizeConfigCategory(config, category) {
   }
 }
 
-function createPackageMeta(dir) {
+function createPackageMeta(pkgs, dir) {
   const pkgPath = path.resolve(dir, ROOT_PACKAGE_FILE)
 
   if (!fs.existsSync(pkgPath)) {
@@ -66,11 +66,18 @@ function createPackageMeta(dir) {
   const getPackage = () => JSON.parse(fs.readFileSync(pkgPath, "utf8"))
   const content = getPackage()
 
-  return {
-    getPackage,
-    name: content.name,
-    dir,
+  if (content.private) {
+    return pkgs
   }
+
+  return [
+    ...pkgs,
+    {
+      getPackage,
+      name: content.name,
+      dir,
+    },
+  ]
 }
 
 export function normalizeConfig(args, userConfig) {
@@ -131,7 +138,7 @@ export function normalizeConfig(args, userConfig) {
   }, [])
 
   // Create new entries for each package to release
-  config.packages = packageRoots.map(createPackageMeta)
+  config.packages = packageRoots.reduce(createPackageMeta, [])
   config.packageNames = config.packages.map((pkg) => pkg.name)
 
   // Validate packages are within the current repo root
