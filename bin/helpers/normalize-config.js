@@ -73,7 +73,7 @@ function createPackageMeta(dir) {
   }
 }
 
-export function normalizeConfig() {
+export function normalizeConfig(args, userConfig) {
   reporter.start("Preparing for release")
 
   let config = {
@@ -91,8 +91,13 @@ export function normalizeConfig() {
   }
 
   const rootPackage = JSON.parse(fs.readFileSync(ROOT_PACKAGE_PATH, "utf8"))
+  const possibleUserConfig = args.config ? path.resolve(cwd, args.config) : ""
 
-  if (fs.existsSync(CONFIG_PATH)) {
+  if (userConfig) {
+    config = userConfig
+  } else if (args.config && fs.existsSync(possibleUserConfig)) {
+    config = JSON.parse(fs.readFileSync(possibleUserConfig, "utf8"))
+  } else if (fs.existsSync(CONFIG_PATH)) {
     config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"))
   } else if (rootPackage["release-workspaces"]) {
     config = rootPackage["release-workspaces"]

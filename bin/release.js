@@ -7,30 +7,32 @@ import { triggerCmd } from "./helpers/trigger-cmd.js"
 import { increment } from "./increment.js"
 import { commit } from "./commit.js"
 
-async function releaseWorkspaces(userArgs, userConfig) {
-  const args = userArgs || getArgs()
-  const config = userConfig || normalizeConfig()
-  const { prepublish, postpublish, precommit, postcommit } = config.hooks
+export async function release(userArgs, userConfig) {
+  const args = userArgs
+    ? Object.assign({ verbose: false, dryRun: false }, userArgs)
+    : getArgs()
+  const config = normalizeConfig(args, userConfig)
+  const { preincrement, postincrement, precommit, postcommit } = config.hooks
   const { npm, git } = config
 
   // Increment version and publish to npm
 
   if (npm.increment) {
-    if (prepublish) {
+    if (preincrement) {
       await triggerCmd({
         args,
-        cmd: prepublish,
-        step: "Prepublish",
+        cmd: preincrement,
+        step: "preincrement",
       })
     }
 
     await increment(args, config)
 
-    if (postpublish) {
+    if (postincrement) {
       await triggerCmd({
         args,
-        cmd: postpublish,
-        step: "Postpublish",
+        cmd: postincrement,
+        step: "postincrement",
       })
     }
   }
@@ -49,5 +51,3 @@ async function releaseWorkspaces(userArgs, userConfig) {
     }
   }
 }
-
-releaseWorkspaces()

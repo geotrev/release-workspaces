@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "description": "Automated versioning and publishing of projects using npm workspaces",
   "type": "module",
-  "main": "bin/release-workspaces.js",
+  "main": "bin/release.js",
   "bin": {
-    "release-workspaces": "bin/release-workspaces.js"
+    "release-workspaces": "bin/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0"
@@ -66,11 +66,5 @@
     "packages/*",
     "lib/test-a",
     "lib/test-b"
-  ],
-  "release-workspaces": {
-    "git": {},
-    "npm": {},
-    "hooks": {},
-    "increment": {}
-  }
+  ]
 }

@@ -1,11 +1,11 @@
 export const configDefault = {
   increment: {
-    codependencies: false,
+    codependencies: true,
     rangePrefix: "^",
   },
   hooks: {
-    prepublish: "",
-    postpublish: "",
+    preincrement: "",
+    postincrement: "",
     precommit: "",
     postcommit: "",
   },
@@ -16,5 +16,6 @@ export const configDefault = {
     commitMessage: "Release ${version}",
     tagMessage: "Release ${version}",
     commit: true,
+    tag: true,
   },
 }

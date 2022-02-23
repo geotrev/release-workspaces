@@ -6,9 +6,12 @@ export function getArgs() {
   return yargs(process.argv.slice(2))
     .option("config", {
       alias: "c",
+      type: "string",
       describe: "User config target.",
     })
     .option("verbose", {
+      default: false,
+      type: "boolean",
       describe: "Prints all commands used by the tool.",
     })
     .option("dry-run", {
@@ -19,14 +22,17 @@ export function getArgs() {
     })
     .option("target", {
       alias: "t",
+      type: "string",
       describe: "The semver target.",
     })
     .option("preid", {
       alias: "p",
+      type: "string",
       describe: "The prerelease id. Overriden by '-n' when publishing.",
     })
     .option("npm-tag", {
       alias: "n",
+      type: "string",
       describe: "The npm tag. Falls back to preid or 'latest'.",
     }).argv
 }
