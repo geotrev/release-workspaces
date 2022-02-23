@@ -1,0 +1,76 @@
+{
+  "name": "release-workspaces",
+  "version": "0.1.0",
+  "description": "Automated versioning and publishing of projects using npm workspaces",
+  "type": "module",
+  "main": "bin/release-workspaces.js",
+  "bin": {
+    "release-workspaces": "bin/release-workspaces.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ora": "^6.0.1",
+    "semver": "^7.3.5",
+    "yargs": "^17.3.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@babel/eslint-parser": "^7.16.5",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.4.6",
+    "commithelper": "^1.2.0",
+    "eslint": "^8.7.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest": "^25.7.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
+    "jest": "^27.4.7",
+    "lint-staged": "^12.1.7",
+    "prettier": "^2.5.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geotrev/release-workspaces.git"
+  },
+  "keywords": [],
+  "author": "George Treviranus <geowtrev@gmail.com> (https://geotrev.com/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/geotrev/release-workspaces/issues"
+  },
+  "homepage": "https://github.com/geotrev/release-workspaces#readme",
+  "lint-staged": {
+    "*.js": [
+      "npm run prettier:check",
+      "npm run eslint:check"
+    ],
+    "*.json": [
+      "npm run prettier:write"
+    ]
+  },
+  "commithelper": {
+    "types": [
+      "feat",
+      "fix",
+      "chore",
+      "docs",
+      "style",
+      "refactor",
+      "perf",
+      "test"
+    ]
+  },
+  "workspaces": [
+    "packages/*",
+    "lib/test-a",
+    "lib/test-b"
+  ],
+  "release-workspaces": {
+    "git": {},
+    "npm": {},
+    "hooks": {},
+    "increment": {}
+  }
+}

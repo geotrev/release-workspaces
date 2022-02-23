@@ -1,0 +1,35 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true,
+    "es6": true,
+    "jest/globals": true
+  },
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "plugins": ["jest"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:jest/recommended"
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js"],
+        "paths": ["src/"],
+        "moduleDirectory": ["node_modules/"]
+      }
+    }
+  },
+  "globals": {
+    "BUILD_ENV": "readonly"
+  },
+  "rules": {
+    "no-console": 2,
+    "no-unused-vars": ["error", { "varsIgnorePattern": "jsx|Fragment" }]
+  }
+}
