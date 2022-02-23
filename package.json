@@ -41,6 +41,12 @@
     "url": "https://github.com/geotrev/release-workspaces/issues"
   },
   "homepage": "https://github.com/geotrev/release-workspaces#readme",
+  "files": [
+    "bin/*.js"
+  ],
+  "directories": {
+    "bin": "bin"
+  },
   "lint-staged": {
     "*.js": [
       "npm run prettier:check",
@@ -63,8 +69,8 @@
     ]
   },
   "workspaces": [
-    "packages/*",
-    "lib/test-a",
-    "lib/test-b"
+    "test-packages/packages/*",
+    "test-packages/lib/test-a",
+    "test-packages/lib/test-b"
   ]
 }

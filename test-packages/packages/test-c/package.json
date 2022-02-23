@@ -1,0 +1,7 @@
+{
+  "name": "@release-workspaces-test/c",
+  "version": "0.2.0-alpha.0",
+  "dependencies": {
+    "@release-workspaces-test/b": "^0.2.0-alpha.0"
+  }
+}

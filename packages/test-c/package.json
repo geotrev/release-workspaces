@@ -1,7 +1,0 @@
-{
-  "name": "test-release-workspaces-c",
-  "version": "0.1.0",
-  "dependencies": {
-    "test-release-workspaces-b": "^0.1.0"
-  }
-}
