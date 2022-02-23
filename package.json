@@ -36,7 +36,7 @@
   },
   "keywords": [],
   "author": "George Treviranus <geowtrev@gmail.com> (https://geotrev.com/)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/geotrev/release-workspaces/issues"
   },
