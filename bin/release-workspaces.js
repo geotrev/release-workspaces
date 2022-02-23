@@ -7,7 +7,7 @@ import { triggerCmd } from "./helpers/trigger-cmd.js"
 import { increment } from "./increment.js"
 import { commit } from "./commit.js"
 
-async function releaseWorkspaces(userArgs = {}, userConfig = {}) {
+async function releaseWorkspaces(userArgs, userConfig) {
   const args = userArgs || getArgs()
   const config = userConfig || normalizeConfig()
   const { prepublish, postpublish, precommit, postcommit } = config.hooks

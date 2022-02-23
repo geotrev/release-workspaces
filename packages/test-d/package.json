@@ -1,4 +1,8 @@
 {
   "name": "test-release-workspaces-d",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "dependencies": {
+    "test-b": "^0.1.0",
+    "test-c": "^0.1.0"
+  }
 }

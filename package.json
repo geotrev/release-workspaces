@@ -8,7 +8,7 @@
     "release-workspaces": "bin/release-workspaces.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
     "ora": "^6.0.1",
