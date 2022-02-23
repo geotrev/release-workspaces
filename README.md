@@ -19,37 +19,50 @@ You can define a configuration in a few weeks. Add a `.release-workspaces.json` 
 
 ### Options
 
-```json
+Default values denoted after each field.
+
+```js
 {
   "increment": {
     // Ensures packages within the monorepo have the correct version before publishing
     "codependencies": true,
+
     // Range prefix for codependencies
     "rangePrefix": "^"
   },
   "hooks": {
     // Runs before packages are versioned and published
     "preincrement": "",
+
     // Runs after packages are versioned and published
     "postincrement": "",
+
     // Runs before the release commit is created
     "precommit": "",
+
     // Runs after the release commit is created
     "postcommit": ""
   },
   "npm": {
-    "increment": true
+    // If false, does not increment the version
+    "increment": true,
+
+    // If false, does not publish the package
+    // NOTE: If `increment` is false, the tool will still attempt to publish
+    "publish": true
   },
   "git": {
     // The commit message for the release commit
     "commitMessage": "Release ${version}",
+
     // The tag message for the release commit
     "tagMessage": "Release ${version}",
+
     // If false, file changes created during the release are not commited
     "commit": true,
-    // If false, will not tag your commit with the new version.
-    // NOTE: If `commit` above is `false`, then this option won't do anything
-    //       because a new commit was never generated to be tagged
+
+    // If false, will not tag your commit with the new version
+    // NOTE: If `commit` is `false`, the tool will still attempt tagging the previous commit
     "tag": true
   }
 }
