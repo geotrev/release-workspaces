@@ -2,5 +2,7 @@
   "git": {},
   "npm": {},
   "hooks": {},
-  "increment": {}
+  "increment": {
+    "codependencies": true
+  }
 }
