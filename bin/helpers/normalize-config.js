@@ -65,10 +65,6 @@ function createPackageMeta(pkgs, dir) {
   const getPackage = () => JSON.parse(fs.readFileSync(pkgPath, "utf8"))
   const content = getPackage()
 
-  if (content.private) {
-    return pkgs
-  }
-
   return [
     ...pkgs,
     {
