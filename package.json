@@ -51,7 +51,7 @@
   },
   "homepage": "https://github.com/geotrev/release-workspaces#readme",
   "files": [
-    "bin/*.js"
+    "bin/**/*.js"
   ],
   "directories": {
     "bin": "bin"
