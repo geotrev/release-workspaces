@@ -29,17 +29,19 @@ If you need to run a package-specific npm lifecycle script such as `preversion` 
 
 Version and publish your packages through the CLI.
 
-Arguments passed through the CLI will be passed verbatim to and validated by [semver](https://www.npmjs.com/package/semver) (`semver.inc`, specifically) under the hood. This works great from both an implementation and user experience perspective, as it mirrors 1:1 how npm handles versioning, anyway, and fails naturally if a combination of arguments is invalid (e.g., no `--target` flag is given)
+Arguments passed through the CLI will be passed verbatim to and validated by [semver](https://www.npmjs.com/package/semver) (`semver.inc`, specifically) under the hood. This works great from both an implementation and user experience perspective, as it mirrors 1:1 how npm handles versioning anyway, and fails naturally if a combination of arguments is invalid (e.g., no `--target` given but `--preid` is)
 
 ### Core Options
 
-| Name        | Alias | Type    | Required | Description                                                                        |
-| ----------- | ----- | ------- | -------- | ---------------------------------------------------------------------------------- |
-| `--target`  | `t`   | string  | Y        | The target semver increment. E.g. `minor`, `prepatch`, `prerelease`, etc.          |
-| `--preid`   | `p`   | string  | N        | If given, will set the version as a prerelease. E.g. `alpha`, `rc`, etc.           |
-| `--npm-tag` | `n`   | string  | N        | If given, sets the npm tag. Otherwise uses the `preid`. E.g. `next`.               |
-| `--dry-run` | `d`   | boolean | N        | If given, prints commands configured to run by the tool, but doesn't execute them. |
-| `--verbose` |       | boolean | N        | Like `dry-run`, but runs all commands.                                             |
+Since you can disable any and all facets of the release lifecycle through the config file, none of these options are strictly required.
+
+| Name        | Alias | Type    | Description                                                                        |
+| ----------- | ----- | ------- | ---------------------------------------------------------------------------------- |
+| `--target`  | `t`   | string  | The target semver increment. E.g. `minor`, `prepatch`, `prerelease`, etc.          |
+| `--preid`   | `p`   | string  | If given, will set the version as a prerelease. E.g. `alpha`, `rc`, etc.           |
+| `--npm-tag` | `n`   | string  | If given, sets the npm tag. Otherwise uses the `preid`. E.g. `next`.               |
+| `--dry-run` | `d`   | boolean | If given, prints commands configured to run by the tool, but doesn't execute them. |
+| `--verbose` |       | boolean | Like `dry-run`, but runs all commands.                                             |
 
 Simple example:
 
@@ -52,20 +54,20 @@ Complex example:
 
 ```sh
 # 1.5.0 -> 2.0.0-rc.0 (@next)
-$ release-workspaces --target premajor --preid rc --npm-tag next --no-git.tag
+$ release-workspaces --target premajor --preid rc --npm-tag next
 ```
 
 ### Config Options
 
 Passing in CLI config options will override your config file. Useful for one-off releases and custom npm scripts meant to augment a base configuration.
 
-Example with no versioning or publishing, just tag generation:
+For example, say you don't want to version, publish, or commit any changes in your current repo, but instead just tag the latest commit with the current version:
 
 ```sh
 $ release-workspaces --no-npm.increment --no-npm.publish --no-git.commit
 ```
 
-Note that **any boolean config option** can be negated by prepending `--no-`.
+Note that **any boolean config option** can be negated by prepending `--no-`, not just those shown above.
 
 ## Examples
 
