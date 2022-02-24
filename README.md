@@ -69,6 +69,18 @@ $ release-workspaces --no-npm.increment --no-npm.publish --no-git.commit
 
 Note that **any boolean config option** can be negated by prepending `--no-`, not just those shown above.
 
+## Npm Tag
+
+Determining the correct tag to publish on is important for this package, as you don't want to accidentally have an `alpha` version go to `latest`.
+
+To remedy this issue, there are some fallback checks you can rely on. Here is the order of operations the tool uses when checking the correct tag to release your packages to:
+
+```
+config.npmTag > config.preid > Parse from version > "latest"
+```
+
+Note the last two here. If neither of the appropriate flags were provided, the tool will check the version of your package for a prerelease part. If none exist, then `latest` will be used.
+
 ## Examples
 
 Here's a straightforward example of versioning and publishing your workspace packages from prerelease to release candidate (rc) to final.

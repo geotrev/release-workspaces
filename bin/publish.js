@@ -1,12 +1,19 @@
 #!/usr/bin/env node
 
+import semver from "semver"
 import { exec } from "./helpers/exec-promise.js"
 import { pkgReporter, logErr } from "./helpers/reporter.js"
+
+function parsePreId(entry) {
+  const version = entry.getPackage().version
+  const parts = semver.prerelease(version) || []
+  return parts[0]
+}
 
 export async function publish(config, entry) {
   pkgReporter.start(`Publish ${entry.name}`)
 
-  const pubTag = config.npmTag || config.preid || "latest"
+  const pubTag = config.npmTag || config.preid || parsePreId(entry) || "latest"
   const pubCommand = `npm publish -w ${entry.name} --tag ${pubTag}`
   const addChangesCommand = "git add . -u"
 
