@@ -1,5 +1,5 @@
 import { exec } from "./exec-promise.js"
-import { reporter as defaultReporter } from "./reporter.js"
+import { reporter as defaultReporter, logErr } from "./reporter.js"
 
 export async function triggerCmd(meta, reporter = defaultReporter) {
   reporter.start(meta.step)
@@ -14,9 +14,7 @@ export async function triggerCmd(meta, reporter = defaultReporter) {
 
       await exec(meta.cmd)
     } catch (e) {
-      /* eslint-disable-next-line no-console */
-      console.error(`Erroring running '${meta.cmd}':`, e)
-      reporter.fail(`Unable to complete: ${meta.step}`)
+      logErr(e, `Unable to complete step: ${meta.step}`)
     }
   }
 
