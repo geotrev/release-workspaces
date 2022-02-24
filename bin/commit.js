@@ -44,7 +44,7 @@ export async function commit(config) {
       tagMessage.indexOf(VERSION_INSERT) > -1
         ? tagMessage.replace(VERSION_INSERT, tagVersion)
         : tagMessage
-    const tagCmd = `git tag -a -m '${tagMsg}' ${tagVersion}`
+    const tagCmd = `git tag -a -m '${tagMsg}' v${tagVersion}`
 
     if (pretag) {
       await triggerCmd({ config, cmd: pretag, step: "Pretag" })
