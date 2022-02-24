@@ -1,3 +1,13 @@
+## [0.1.2](https://github.com/geotrev/release-workspaces/compare/v0.1.1...v0.1.2) (2022-02-24)
+
+
+### Bug Fixes
+
+* adds error exit when triggerCmd calls fail ([62ceaea](https://github.com/geotrev/release-workspaces/commit/62ceaeac3a40a7a181405e49c36ce092487f7a8a))
+* update private package version, but don't publish ([f52b26d](https://github.com/geotrev/release-workspaces/commit/f52b26dffdf79f3df4f42fc2cc1bcf18fe18412e))
+* use full tag name for annotated tag ([24661f7](https://github.com/geotrev/release-workspaces/commit/24661f775b34fa1a7d2e43ab8458955b2e43c21d))
+* uses existing version for commit and tag messages in release ([097d04d](https://github.com/geotrev/release-workspaces/commit/097d04d5cc08f23b2a464cd8dc406c923c9968ce))
+
 ## [0.1.1](https://github.com/geotrev/release-workspaces/compare/v0.1.0...v0.1.1) (2022-02-24)
 
 
