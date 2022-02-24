@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 
 import yargs from "yargs"
+import { findUpSync } from "find-up"
+import fs from "fs"
 
 export function getArgs() {
+  const configPath = findUpSync([".release-workspaces.json"])
+  const config = configPath ? JSON.parse(fs.readFileSync(configPath)) : {}
+
   return yargs(process.argv.slice(2))
     .option("config", {
       alias: "c",
@@ -25,12 +30,6 @@ export function getArgs() {
       type: "string",
       describe: "The semver target.",
     })
-    .option("prerelease", {
-      alias: "r",
-      default: false,
-      type: "boolean",
-      describe: "If given, increments existing prerelease version",
-    })
     .option("preid", {
       alias: "p",
       type: "string",
@@ -40,5 +39,8 @@ export function getArgs() {
       alias: "n",
       type: "string",
       describe: "The npm tag. Falls back to preid or 'latest'.",
-    }).argv
+    })
+    .config(config)
+    .pkgConf("release-workspaces")
+    .parse()
 }

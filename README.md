@@ -88,15 +88,14 @@ Arguments passed through the CLI will be passed verbatim to and validated by [se
 
 ### Core Options
 
-| Name           | Alias | Type    | Required | Description                                                                        |
-| -------------- | ----- | ------- | -------- | ---------------------------------------------------------------------------------- |
-| `--target`     | `t`   | string  | Y        | The target semver increment. E.g. `minor`, `prepatch`, etc.                        |
-| `--preid`      | `p`   | string  | N        | If given, will set the version as a prerelease. E.g. `alpha`, `rc`, etc.           |
-| `--prerelease` | `r`   | boolean | N        | If given, will increment an existing prerelease. E.g. `-rc.0` -> `-rc.1`.          |
-| `--npm-tag`    | `n`   | string  | N        | If given, sets the npm tag. Otherwise uses the `preid`. E.g. `next`.               |
-| `--config`     | `c`   | string  | N        | Define a custom file path and/or name.                                             |
-| `--dry-run`    | `d`   | boolean | N        | If given, prints commands configured to run by the tool, but doesn't execute them. |
-| `--verbose`    |       | boolean | N        | Like `dry-run`, but runs all commands                                              |
+| Name        | Alias | Type    | Required | Description                                                                        |
+| ----------- | ----- | ------- | -------- | ---------------------------------------------------------------------------------- |
+| `--target`  | `t`   | string  | Y        | The target semver increment. E.g. `minor`, `prepatch`, `prerelease`, etc.          |
+| `--preid`   | `p`   | string  | N        | If given, will set the version as a prerelease. E.g. `alpha`, `rc`, etc.           |
+| `--npm-tag` | `n`   | string  | N        | If given, sets the npm tag. Otherwise uses the `preid`. E.g. `next`.               |
+| `--config`  | `c`   | string  | N        | Define a custom file path and/or name.                                             |
+| `--dry-run` | `d`   | boolean | N        | If given, prints commands configured to run by the tool, but doesn't execute them. |
+| `--verbose` |       | boolean | N        | Like `dry-run`, but runs all commands                                              |
 
 Simple example:
 
