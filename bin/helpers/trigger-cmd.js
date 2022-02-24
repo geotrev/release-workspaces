@@ -8,6 +8,10 @@ export async function triggerCmd(meta, reporter = defaultReporter) {
     reporter.info(meta.cmd)
   } else {
     try {
+      if (meta.config.verbose) {
+        reporter.info(meta.cmd)
+      }
+
       await exec(meta.cmd)
     } catch (e) {
       /* eslint-disable-next-line no-console */

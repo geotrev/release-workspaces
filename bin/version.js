@@ -3,7 +3,7 @@
 import fs from "fs"
 import path from "path"
 import { exec } from "./helpers/exec-promise.js"
-import { pkgReporter, reporter } from "./helpers/reporter.js"
+import { logErr, pkgReporter } from "./helpers/reporter.js"
 import { ROOT_PACKAGE_FILE } from "./helpers/constants.js"
 
 function incrementDependencies(config, entry) {
@@ -47,16 +47,17 @@ function incrementDependencies(config, entry) {
       pkgReporter.info(writeCommand)
     } else {
       try {
+        if (config.verbose) {
+          pkgReporter.info(writeCommand)
+        }
+
         fs.writeFileSync(
           path.resolve(dir, ROOT_PACKAGE_FILE),
           newPkgJson + "\n",
           "utf8"
         )
       } catch (e) {
-        /* eslint-disable-next-line no-console */
-        console.error("Error:", e)
-        reporter.fail(`Something went wrong updating package.json`)
-        process.exit(1)
+        logErr(e, "Something went wrong updating package.json")
       }
     }
 
@@ -75,12 +76,13 @@ export async function version(config, entry, newVersion) {
     pkgReporter.info(incCommand)
   } else {
     try {
+      if (config.verbose) {
+        pkgReporter.info(incCommand)
+      }
+
       await exec(incCommand)
     } catch (e) {
-      /* eslint-disable-next-line no-console */
-      console.error("Error", e)
-      reporter.fail("Something went wrong while versioning")
-      process.exit(1)
+      logErr(e, "Something went wrong while versioning")
     }
   }
 

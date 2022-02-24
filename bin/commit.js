@@ -2,6 +2,10 @@
 
 import { triggerCmd } from "./helpers/trigger-cmd.js"
 
+function getCurrentVersion(config) {
+  return config.packages[0].getPackage().version
+}
+
 export async function commit(config) {
   const {
     commitMessage,
@@ -25,11 +29,7 @@ export async function commit(config) {
       await triggerCmd({ config, cmd: precommit, step: "Precommit" })
     }
 
-    await triggerCmd({
-      config,
-      cmd: commitCmd,
-      step: "Commit",
-    })
+    await triggerCmd({ config, cmd: commitCmd, step: "Commit" })
 
     if (postcommit) {
       await triggerCmd({ config, cmd: postcommit, step: "Postcommit" })
@@ -43,17 +43,15 @@ export async function commit(config) {
       tagMessage.indexOf(VERSION_INSERT) > -1
         ? tagMessage.replace(VERSION_INSERT, config.releaseVersion)
         : tagMessage
-    const tagCmd = `git tag -a -m '${tagMsg}' ${config.releaseVersion}`
+    const tagCmd = `git tag -a -m '${tagMsg}' ${
+      config.releaseVersion || getCurrentVersion(config)
+    }`
 
     if (pretag) {
       await triggerCmd({ config, cmd: pretag, step: "Pretag" })
     }
 
-    await triggerCmd({
-      config,
-      cmd: tagCmd,
-      step: "Tag",
-    })
+    await triggerCmd({ config, cmd: tagCmd, step: "Tag" })
 
     if (posttag) {
       await triggerCmd({ config, cmd: posttag, step: "Posttag" })
@@ -69,11 +67,7 @@ export async function commit(config) {
       await triggerCmd({ config, cmd: prepush, step: "Prepush" })
     }
 
-    await triggerCmd({
-      config,
-      cmd: pushCmd,
-      step: "Push",
-    })
+    await triggerCmd({ config, cmd: pushCmd, step: "Push" })
 
     if (postpush) {
       await triggerCmd({ config, cmd: postpush, step: "Postpush" })

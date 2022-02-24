@@ -14,7 +14,7 @@ export function getArgs(userArgs) {
     .option("verbose", {
       default: false,
       type: "boolean",
-      describe: "Prints all commands used by the tool.",
+      describe: "Prints all commands used by the tool during execution.",
     })
     .option("dry-run", {
       alias: "d",

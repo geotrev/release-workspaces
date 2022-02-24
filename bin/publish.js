@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { exec } from "./helpers/exec-promise.js"
-import { reporter, pkgReporter } from "./helpers/reporter.js"
+import { pkgReporter, logErr } from "./helpers/reporter.js"
 
 export async function publish(config, entry) {
   pkgReporter.start(`Publish ${entry.name}`)
@@ -15,13 +15,19 @@ export async function publish(config, entry) {
     pkgReporter.info(pubCommand)
   } else {
     try {
+      if (config.verbose) {
+        pkgReporter.info(addChangesCommand)
+      }
+
       await exec(addChangesCommand)
+
+      if (config.verbose) {
+        pkgReporter.info(pubCommand)
+      }
+
       await exec(pubCommand)
     } catch (e) {
-      /* eslint-disable-next-line no-console */
-      console.error("Error:", e)
-      reporter.fail(`Something went wrong releasing ${entry.name}`)
-      process.exit(1)
+      logErr(e, `Something went wrong releasing ${entry.name}`)
     }
   }
 
