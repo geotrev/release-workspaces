@@ -2,7 +2,7 @@
 
 import { triggerCmd } from "./helpers/trigger-cmd.js"
 
-export async function commit(args, config) {
+export async function commit(config) {
   const {
     commitMessage,
     tagMessage,
@@ -22,17 +22,17 @@ export async function commit(args, config) {
     const commitCmd = `git commit -m '${commitMsg}'`
 
     if (precommit) {
-      await triggerCmd({ args, cmd: precommit, step: "Precommit" })
+      await triggerCmd({ config, cmd: precommit, step: "Precommit" })
     }
 
     await triggerCmd({
-      args,
+      config,
       cmd: commitCmd,
       step: "Commit",
     })
 
     if (postcommit) {
-      await triggerCmd({ args, cmd: postcommit, step: "Postcommit" })
+      await triggerCmd({ config, cmd: postcommit, step: "Postcommit" })
     }
   }
 
@@ -46,17 +46,17 @@ export async function commit(args, config) {
     const tagCmd = `git tag -a -m '${tagMsg}' ${config.releaseVersion}`
 
     if (pretag) {
-      await triggerCmd({ args, cmd: pretag, step: "Pretag" })
+      await triggerCmd({ config, cmd: pretag, step: "Pretag" })
     }
 
     await triggerCmd({
-      args,
+      config,
       cmd: tagCmd,
       step: "Tag",
     })
 
     if (posttag) {
-      await triggerCmd({ args, cmd: posttag, step: "Posttag" })
+      await triggerCmd({ config, cmd: posttag, step: "Posttag" })
     }
   }
 
@@ -66,17 +66,17 @@ export async function commit(args, config) {
     const pushCmd = "git push --follow-tags"
 
     if (prepush) {
-      await triggerCmd({ args, cmd: prepush, step: "Prepush" })
+      await triggerCmd({ config, cmd: prepush, step: "Prepush" })
     }
 
     await triggerCmd({
-      args,
+      config,
       cmd: pushCmd,
       step: "Push",
     })
 
     if (postpush) {
-      await triggerCmd({ args, cmd: postpush, step: "Postpush" })
+      await triggerCmd({ config, cmd: postpush, step: "Postpush" })
     }
   }
 }

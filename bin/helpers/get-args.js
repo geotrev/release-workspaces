@@ -4,16 +4,13 @@ import yargs from "yargs"
 import { findUpSync } from "find-up"
 import fs from "fs"
 
-export function getArgs() {
+export function getArgs(userArgs) {
   const configPath = findUpSync([".release-workspaces.json"])
-  const config = configPath ? JSON.parse(fs.readFileSync(configPath)) : {}
+  const config = configPath
+    ? JSON.parse(fs.readFileSync(configPath))
+    : userArgs || {}
 
   return yargs(process.argv.slice(2))
-    .option("config", {
-      alias: "c",
-      type: "string",
-      describe: "User config target.",
-    })
     .option("verbose", {
       default: false,
       type: "boolean",

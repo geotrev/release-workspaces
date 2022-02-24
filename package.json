@@ -5,7 +5,7 @@
   "type": "module",
   "main": "bin/release.js",
   "bin": {
-    "release-workspaces": "bin/index.js"
+    "release-workspaces": "bin/release.js"
   },
   "scripts": {
     "prepare": "husky install",

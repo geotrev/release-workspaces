@@ -2,13 +2,9 @@ import { exec } from "./exec-promise.js"
 import { reporter as defaultReporter } from "./reporter.js"
 
 export async function triggerCmd(meta, reporter = defaultReporter) {
-  if ((typeof meta.shouldRun !== "undefined" && !meta.shouldRun) || !meta.cmd) {
-    return
-  }
-
   reporter.start(meta.step)
 
-  if (meta.args.dryRun) {
+  if (meta.config.dryRun) {
     reporter.info(meta.cmd)
   } else {
     try {

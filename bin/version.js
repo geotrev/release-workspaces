@@ -6,7 +6,7 @@ import { exec } from "./helpers/exec-promise.js"
 import { pkgReporter, reporter } from "./helpers/reporter.js"
 import { ROOT_PACKAGE_FILE } from "./helpers/constants.js"
 
-function incrementDependencies(args, config, entry) {
+function incrementDependencies(config, entry) {
   pkgReporter.start("Increment co-dependencies")
 
   const { getPackage, dir } = entry
@@ -43,7 +43,7 @@ function incrementDependencies(args, config, entry) {
     const newPkgJson = JSON.stringify(pkgContent, null, 2)
     const writeCommand = `fs.writeFileSync(path.resolve(dir, "${ROOT_PACKAGE_FILE}"), newPkgJson, "utf8")`
 
-    if (args.dryRun) {
+    if (config.dryRun) {
       pkgReporter.info(writeCommand)
     } else {
       try {
@@ -66,12 +66,12 @@ function incrementDependencies(args, config, entry) {
   }
 }
 
-export async function version(args, config, entry, newVersion) {
+export async function version(config, entry, newVersion) {
   pkgReporter.start(`Bump ${entry.name} to v${newVersion}`)
 
   const incCommand = `npm version -w ${entry.name} ${newVersion} --no-git-tag-version`
 
-  if (args.dryRun) {
+  if (config.dryRun) {
     pkgReporter.info(incCommand)
   } else {
     try {
@@ -85,7 +85,7 @@ export async function version(args, config, entry, newVersion) {
   }
 
   if (config.increment.codependencies) {
-    incrementDependencies(args, config, entry)
+    incrementDependencies(config, entry)
   }
 
   pkgReporter.succeed("Version successful")

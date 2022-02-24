@@ -3,12 +3,11 @@
 import fs from "fs"
 import glob from "glob"
 import path from "path"
-import { CONFIG_FILE, ROOT_PACKAGE_FILE } from "./constants.js"
+import { ROOT_PACKAGE_FILE } from "./constants.js"
 import { reporter } from "./reporter.js"
 import { configDefault } from "./config-default.js"
 
 const cwd = process.cwd()
-const CONFIG_PATH = path.resolve(cwd, CONFIG_FILE)
 const ROOT_PACKAGE_PATH = path.resolve(cwd, ROOT_PACKAGE_FILE)
 
 /**
@@ -80,39 +79,12 @@ function createPackageMeta(pkgs, dir) {
   ]
 }
 
-export function normalizeConfig(args, userConfig) {
+export function normalizeConfig(config) {
   reporter.start("Preparing for release")
 
-  let config = {
-    set releaseVersion(value) {
-      config._rVersion = value
-    },
-    get releaseVersion() {
-      return config._rVersion
-    },
-  }
-
-  if (!fs.existsSync(ROOT_PACKAGE_PATH)) {
-    reporter.fail("Current directory is not a repository")
-    process.exit(1)
-  }
+  config.releaseVersion = null
 
   const rootPackage = JSON.parse(fs.readFileSync(ROOT_PACKAGE_PATH, "utf8"))
-  const possibleUserConfig = args.config ? path.resolve(cwd, args.config) : ""
-
-  if (userConfig) {
-    config = userConfig
-  } else if (args.config && fs.existsSync(possibleUserConfig)) {
-    config = JSON.parse(fs.readFileSync(possibleUserConfig, "utf8"))
-  } else if (fs.existsSync(CONFIG_PATH)) {
-    config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"))
-  } else if (rootPackage["release-workspaces"]) {
-    config = rootPackage["release-workspaces"]
-  } else {
-    reporter.warn(
-      "No release-workspaces config detecting. Proceeding with defaults."
-    )
-  }
 
   // Set defaults
 

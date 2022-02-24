@@ -24,5 +24,6 @@ export const configDefault = {
     tagMessage: "Release ${version}",
     commit: true,
     tag: true,
+    push: true,
   },
 }

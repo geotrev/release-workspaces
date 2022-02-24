@@ -18,65 +18,10 @@ Define the config file one of few ways:
 
 - `.release-workspaces.json` file in monorepo root
 - `"release-workspaces"` field of package.json
-- `--config` CLI option for a custom JSON file path
 
 ### Options
 
-Default values denoted after each field.
-
-```js
-{
-  // Defines how codependent monorepo packages are versioned during a release
-  "increment": {
-    // If false, will not bump codependent package versions.
-    "codependencies": true,
-
-    // Range prefix to use when incrementing codependent packages
-    "rangePrefix": "^"
-  },
-
-  // Defines scripts during release-workspaces execution lifecycle
-  "hooks": {
-    // Runs before all packages are versioned and published.
-    "prepublish": "",
-
-    // Runs after all packages are versioned and published
-    "postpublish": "",
-
-    // Runs before the release commit is created
-    "precommit": "",
-
-    // Runs after the release commit is created
-    "postcommit": ""
-  },
-
-  // Controls version and publish behavior
-  "npm": {
-    // If false, does not increment the version
-    "increment": true,
-
-    // If false, does not publish the package
-    // NOTE: If `increment` is false, the tool will still attempt to publish
-    "publish": true
-  },
-
-  // Controls the commit and tag behavior
-  "git": {
-    // The commit message for the release commit
-    "commitMessage": "Release ${version}",
-
-    // The tag message for the release commit
-    "tagMessage": "Release ${version}",
-
-    // If false, file changes created during the release are not commited
-    "commit": true,
-
-    // If false, will not tag your commit with the new version
-    // NOTE: If `commit` is `false`, the tool will still attempt tagging the previous commit
-    "tag": true
-  }
-}
-```
+See all options and their default values [here](bin/helpers/config-default.js).
 
 If you need to run a package-specific npm lifecycle script such as `preversion` or `prepublishOnly`, defining them in the package's `package.json` is all you need to do.
 
@@ -93,9 +38,8 @@ Arguments passed through the CLI will be passed verbatim to and validated by [se
 | `--target`  | `t`   | string  | Y        | The target semver increment. E.g. `minor`, `prepatch`, `prerelease`, etc.          |
 | `--preid`   | `p`   | string  | N        | If given, will set the version as a prerelease. E.g. `alpha`, `rc`, etc.           |
 | `--npm-tag` | `n`   | string  | N        | If given, sets the npm tag. Otherwise uses the `preid`. E.g. `next`.               |
-| `--config`  | `c`   | string  | N        | Define a custom file path and/or name.                                             |
 | `--dry-run` | `d`   | boolean | N        | If given, prints commands configured to run by the tool, but doesn't execute them. |
-| `--verbose` |       | boolean | N        | Like `dry-run`, but runs all commands                                              |
+| `--verbose` |       | boolean | N        | Like `dry-run`, but runs all commands.                                             |
 
 Simple example:
 
@@ -108,51 +52,20 @@ Complex example:
 
 ```sh
 # 1.5.0 -> 2.0.0-rc.0 (@next)
-$ release-workspaces --config path/to/my-config.json --target premajor --preid rc --npm-tag next
+$ release-workspaces --target premajor --preid rc --npm-tag next --no-git.tag
 ```
 
 ### Config Options
 
-Instead of defining a config file, you can instead use CLI flag equivalents.
+Passing in CLI config options will override your config file. Useful for one-off releases and custom npm scripts meant to augment a base configuration.
 
-## Functional Utility
+Example with no versioning or publishing, just tag generation:
 
-You can also use `release` as an async function. Useful if you are tying in the tool to existing scripts for your project.
-
-`release` takes two arguments: `options` and `config`, both being optional if you're comfortable with the default options and/or have a config defined in your project directory, respectively.
-
-All entries in `options` correlate one-to-one with CLI options.
-
-Example:
-
-```js
-import { release } from "release-workspaces
-
-const options = {
-  target: "preminor",
-  preid: "alpha",
-  dryRun: true,
-  verbose: true,
-}
-
-const config = {
-  git: {
-    commit: false,
-  },
-  hooks: {
-    "preincrement": "npm test",
-  },
-  increment: {
-    rangePrefix: "~",
-  },
-}
-
-/* do some other stuff */
-
-await release(options, config)
-
-/* do some more stuff */
+```sh
+$ release-workspaces --no-npm.increment --no-npm.publish --no-git.commit
 ```
+
+Note that **any boolean config option** can be negated by prepending `--no-`.
 
 ## Examples
 

@@ -3,14 +3,14 @@
 import { exec } from "./helpers/exec-promise.js"
 import { reporter, pkgReporter } from "./helpers/reporter.js"
 
-export async function publish(args, entry) {
+export async function publish(config, entry) {
   pkgReporter.start(`Publish ${entry.name}`)
 
-  const pubTag = args.npmTag || args.preid || "latest"
+  const pubTag = config.npmTag || config.preid || "latest"
   const pubCommand = `npm publish -w ${entry.name} --tag ${pubTag}`
   const addChangesCommand = "git add . -u"
 
-  if (args.dryRun) {
+  if (config.dryRun) {
     pkgReporter.info(addChangesCommand)
     pkgReporter.info(pubCommand)
   } else {
