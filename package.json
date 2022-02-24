@@ -25,6 +25,7 @@
     "@babel/core": "^7.16.7",
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.16.11",
+    "@release-it/keep-a-changelog": "^2.3.0",
     "babel-jest": "^27.4.6",
     "commithelper": "^1.2.0",
     "dotenv-cli": "^5.0.0",
@@ -82,6 +83,11 @@
     },
     "github": {
       "release": true
+    },
+    "plugins": {
+      "@release-it/keep-a-changelog": {
+        "filename": "CHANGELOG.md"
+      }
     }
   },
   "workspaces": [
