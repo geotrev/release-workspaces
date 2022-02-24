@@ -4,10 +4,16 @@ export const configDefault = {
     rangePrefix: "^",
   },
   hooks: {
+    preincrement: "",
+    postincrement: "",
     prepublish: "",
     postpublish: "",
     precommit: "",
     postcommit: "",
+    pretag: "",
+    posttag: "",
+    prepush: "",
+    postpush: "",
   },
   npm: {
     increment: true,

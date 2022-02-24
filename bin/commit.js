@@ -8,7 +8,10 @@ export async function commit(args, config) {
     tagMessage,
     tag: shouldTag,
     commit: shouldCommit,
+    push: shouldPush,
   } = config.git
+  const { precommit, postcommit, pretag, posttag, prepush, postpush } =
+    config.hooks
   const VERSION_INSERT = "${version}"
 
   if (shouldCommit) {
@@ -17,12 +20,23 @@ export async function commit(args, config) {
         ? commitMessage.replace(VERSION_INSERT, config.releaseVersion)
         : commitMessage
     const commitCmd = `git commit -m '${commitMsg}'`
+
+    if (precommit) {
+      await triggerCmd({ args, cmd: precommit, step: "Precommit" })
+    }
+
     await triggerCmd({
       args,
       cmd: commitCmd,
       step: "Commit",
     })
+
+    if (postcommit) {
+      await triggerCmd({ args, cmd: postcommit, step: "Postcommit" })
+    }
   }
+
+  // Create the tag
 
   if (shouldTag) {
     const tagMsg =
@@ -31,19 +45,38 @@ export async function commit(args, config) {
         : tagMessage
     const tagCmd = `git tag -a -m '${tagMsg}' ${config.releaseVersion}`
 
+    if (pretag) {
+      await triggerCmd({ args, cmd: pretag, step: "Pretag" })
+    }
+
     await triggerCmd({
       args,
       cmd: tagCmd,
       step: "Tag",
     })
+
+    if (posttag) {
+      await triggerCmd({ args, cmd: posttag, step: "Posttag" })
+    }
   }
 
-  if (shouldTag || shouldCommit) {
+  // If committing or tagging, push it up
+
+  if (shouldPush && (shouldTag || shouldCommit)) {
     const pushCmd = "git push --follow-tags"
+
+    if (prepush) {
+      await triggerCmd({ args, cmd: prepush, step: "Prepush" })
+    }
+
     await triggerCmd({
       args,
       cmd: pushCmd,
       step: "Push",
     })
+
+    if (postpush) {
+      await triggerCmd({ args, cmd: postpush, step: "Postpush" })
+    }
   }
 }
