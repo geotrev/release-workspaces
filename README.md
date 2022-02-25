@@ -4,12 +4,12 @@
   <a href="https://www.npmjs.com/package/release-workspaces"><img src="https://img.shields.io/npm/v/release-workspaces.svg?sanitize=true&style=flat-square" alt="Version"></a>
   <a href="https://github.com/geotrev/release-workspaces/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/release-workspaces.svg?sanitize=true&style=flat-square" alt="License"></a>
   <a href="https://github.com/geotrev/release-workspaces/actions/workflows/test.yml?query=branch%3Amain"><img src="https://badgen.net/github/checks/geotrev/release-workspaces/main?style=flat-square" alt="CI status" /></a>
-  <div style="display: flex; justify-content: center;">
+  <div align="center">
     <img width="500px" height="auto" src="https://github.com/geotrev/release-workspaces/raw/main/demo.gif" />
   </div>
 </p>
 
-Table of Contents:
+**Table of Contents:**
 
 - [About](#about)
 - [Assumptions](#assumptions)
