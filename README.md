@@ -178,3 +178,4 @@ Here are a few handy examples of how to achieve certain release results:
 ## Roadmap
 
 - [ ] Automate GitHub/GitLab releases
+- [ ] Rollback changes if failures occur mid-release

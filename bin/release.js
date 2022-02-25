@@ -11,19 +11,23 @@ import { reportCmd } from "./helpers/cmd.js"
 export async function release() {
   const config = getArgs()
   normalizeConfig(config)
-  const { npm, git, hooks } = config
+  const {
+    npm: { increment, publish },
+    hooks: { prenpm, postnpm },
+    git: { commit, tag },
+  } = config
 
   // Increment version and publish to npm
 
-  if (npm.increment || npm.publish) {
-    if (hooks.prenpm) {
-      await reportCmd({ config, cmd: hooks.prenpm, step: "Prenpm" })
+  if (increment || publish) {
+    if (prenpm) {
+      await reportCmd(prenpm, { ...config, step: "Prenpm" })
     }
 
     await runNpm(config)
 
-    if (hooks.postnpm) {
-      await reportCmd({ config, cmd: hooks.postnpm, step: "Postnpm" })
+    if (postnpm) {
+      await reportCmd(postnpm, { ...config, step: "Postnpm" })
     }
   }
 
@@ -31,7 +35,7 @@ export async function release() {
 
   // Commit changes, create tag, and push to origin
 
-  if (git.commit || git.tag) {
+  if (commit || tag) {
     await runCommit(config)
   }
 }

@@ -2,9 +2,9 @@
 
 import fs from "fs"
 import path from "path"
-import { exec } from "./helpers/exec-promise.js"
 import { logErr, pkgReporter } from "./helpers/reporter.js"
 import { ROOT_PACKAGE_FILE } from "./helpers/constants.js"
+import { cmd } from "./helpers/cmd.js"
 
 function setDependencies(config, entry) {
   const { getPackage, dir } = entry
@@ -56,7 +56,7 @@ function setDependencies(config, entry) {
           "utf8"
         )
       } catch (e) {
-        logErr(e, "Something went wrong updating package.json")
+        logErr(e, "Unable to update package.json.")
       }
     }
   }
@@ -67,21 +67,7 @@ export async function runIncrement(config, entry) {
 
   const incCommand = `npm version -w ${entry.name} ${config.releaseVersion} --no-git-tag-version`
 
-  if (config.dryRun) {
-    if (config.verbose) {
-      pkgReporter.info(incCommand)
-    }
-  } else {
-    try {
-      if (config.verbose) {
-        pkgReporter.info(incCommand)
-      }
-
-      await exec(incCommand)
-    } catch (e) {
-      logErr(e, "Something went wrong while versioning")
-    }
-  }
+  await cmd(incCommand, config, pkgReporter)
 
   setDependencies(config, entry)
 

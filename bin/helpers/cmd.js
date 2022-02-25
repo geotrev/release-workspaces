@@ -1,28 +1,28 @@
 import { exec } from "./exec-promise.js"
 import { reporter as defaultReporter, logErr } from "./reporter.js"
 
-export async function cmd(meta, reporter = defaultReporter) {
-  if (meta.config.dryRun) {
-    if (meta.config.verbose) {
-      reporter.info(meta.cmd)
+export async function cmd(command, config, reporter = defaultReporter) {
+  if (config.dryRun) {
+    if (config.verbose) {
+      reporter.info(command)
     }
   } else {
     try {
-      if (meta.config.verbose) {
-        reporter.info(meta.cmd)
+      if (config.verbose) {
+        reporter.info(command)
       }
 
-      await exec(meta.cmd)
+      await exec(command)
     } catch (e) {
-      logErr(e, `Unable to complete command: ${meta.cmd}`)
+      logErr(e, `Unable to complete command: ${command}`)
     }
   }
 }
 
-export async function reportCmd(meta, reporter = defaultReporter) {
-  reporter.start(meta.step)
+export async function reportCmd(command, config, reporter = defaultReporter) {
+  reporter.start(config.step)
 
-  await cmd(meta, reporter)
+  await cmd(command, config, reporter)
 
-  reporter.succeed(`${meta.step} successful`)
+  reporter.succeed(`${config.step} successful`)
 }

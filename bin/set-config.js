@@ -89,7 +89,7 @@ export async function setConfig(config) {
   }
 
   const addChangesCommand = "git add . -u"
-  await cmd({ cmd: addChangesCommand, config })
+  await cmd(addChangesCommand, config)
 
   reporter.succeed()
 }

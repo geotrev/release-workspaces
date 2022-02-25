@@ -22,13 +22,13 @@ export async function runCommit(config) {
     const commitCmd = `git commit -m '${commitMsg}'`
 
     if (precommit) {
-      await reportCmd({ config, cmd: precommit, step: "Precommit" })
+      await reportCmd(precommit, { ...config, step: "Precommit" })
     }
 
-    await reportCmd({ config, cmd: commitCmd, step: "Commit" })
+    await reportCmd(commitCmd, { ...config, step: "Commit" })
 
     if (postcommit) {
-      await reportCmd({ config, cmd: postcommit, step: "Postcommit" })
+      await reportCmd(postcommit, { ...config, step: "Postcommit" })
     }
   }
 
@@ -42,13 +42,13 @@ export async function runCommit(config) {
     const tagCmd = `git tag -a -m '${tagMsg}' v${config.releaseVersion}`
 
     if (pretag) {
-      await reportCmd({ config, cmd: pretag, step: "Pretag" })
+      await reportCmd(pretag, { ...config, step: "Pretag" })
     }
 
-    await reportCmd({ config, cmd: tagCmd, step: "Tag" })
+    await reportCmd(tagCmd, { ...config, step: "Tag" })
 
     if (posttag) {
-      await reportCmd({ config, cmd: posttag, step: "Posttag" })
+      await reportCmd(posttag, { ...config, step: "Posttag" })
     }
   }
 
@@ -58,13 +58,13 @@ export async function runCommit(config) {
     const pushCmd = "git push --follow-tags"
 
     if (prepush) {
-      await reportCmd({ config, cmd: prepush, step: "Prepush" })
+      await reportCmd(prepush, { ...config, step: "Prepush" })
     }
 
-    await reportCmd({ config, cmd: pushCmd, step: "Push" })
+    await reportCmd(pushCmd, { ...config, step: "Push" })
 
     if (postpush) {
-      await reportCmd({ config, cmd: postpush, step: "Postpush" })
+      await reportCmd(postpush, { ...config, step: "Postpush" })
     }
   }
 }

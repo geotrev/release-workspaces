@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import semver from "semver"
-import { exec } from "./helpers/exec-promise.js"
-import { pkgReporter, logErr } from "./helpers/reporter.js"
+import { cmd } from "./helpers/cmd.js"
+import { pkgReporter } from "./helpers/reporter.js"
 
 function parsePreId(version) {
   const parts = semver.prerelease(version) || []
@@ -18,28 +18,13 @@ export async function runPublish(config, entry) {
     config.preid ||
     parsePreId(config.releaseVersion) ||
     "latest"
-  const pubCommand = `npm publish -w ${entry.name} --tag ${pubTag}`
-  const addChangesCommand = "git add . -u"
 
   if (!isPrivate) {
-    if (config.dryRun) {
-      if (config.verbose) {
-        pkgReporter.info(addChangesCommand)
-        pkgReporter.info(pubCommand)
-      }
-    } else {
-      try {
-        if (config.verbose) {
-          pkgReporter.info(addChangesCommand)
-          pkgReporter.info(pubCommand)
-        }
+    const addChangesCommand = "git add . -u"
+    const pubCommand = `npm publish -w ${entry.name} --tag ${pubTag}`
 
-        await exec(addChangesCommand)
-        await exec(pubCommand)
-      } catch (e) {
-        logErr(e, `Something went wrong releasing ${entry.name}`)
-      }
-    }
+    await cmd(addChangesCommand, config, pkgReporter)
+    await cmd(pubCommand, config, pkgReporter)
 
     pkgReporter.succeed("Publish successful")
   } else {
