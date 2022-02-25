@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import fs from "fs"
-import path from "path"
 import { findUpSync } from "find-up"
 import {
   CONFIG_NAME,
@@ -14,16 +13,16 @@ import { reporter, logErr } from "./helpers/reporter.js"
 export async function setConfig(config) {
   reporter.start("Update root version")
 
-  const cwd = process.cwd()
-
   let updatePkg = false,
     updateConfig = false
   const configPath = findUpSync([ROOT_CONFIG_FILE])
   const configFile = configPath
     ? JSON.parse(fs.readFileSync(configPath, "utf8"))
     : {}
-  const packagePath = fs.readFileSync(path.resolve(cwd, ROOT_PACKAGE_FILE))
-  const packageFile = JSON.parse(packagePath)
+  const packagePath = findUpSync([ROOT_PACKAGE_FILE])
+  const packageFile = packagePath
+    ? JSON.parse(fs.readFileSync(packagePath, "utf8"))
+    : {}
 
   if (configFile.metadata?.version) {
     configFile.metadata.version = config.releaseVersion
