@@ -12,6 +12,7 @@ export function getArgs(userArgs) {
 
   return yargs(process.argv.slice(2))
     .option("verbose", {
+      alias: "b",
       default: false,
       type: "boolean",
       describe: "Prints all commands used by the tool during execution.",

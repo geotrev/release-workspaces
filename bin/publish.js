@@ -4,24 +4,25 @@ import semver from "semver"
 import { exec } from "./helpers/exec-promise.js"
 import { pkgReporter, logErr } from "./helpers/reporter.js"
 
-function parsePreId(entry) {
-  const version = entry.getPackage().version
+function parsePreId(version) {
   const parts = semver.prerelease(version) || []
   return parts[0]
 }
 
 export async function runPublish(config, entry) {
-  pkgReporter.start(`Publish ${entry.name}`)
+  pkgReporter.start(`Publish`)
 
   const isPrivate = entry.getPackage().private
-  const pubTag = config.npmTag || config.preid || parsePreId(entry) || "latest"
+  const pubTag =
+    config.npmTag ||
+    config.preid ||
+    parsePreId(config.releaseVersion) ||
+    "latest"
   const pubCommand = `npm publish -w ${entry.name} --tag ${pubTag}`
   const addChangesCommand = "git add . -u"
 
   if (config.dryRun) {
-    pkgReporter.info(addChangesCommand)
-
-    if (!isPrivate) {
+    if (!isPrivate && config.verbose) {
       pkgReporter.info(pubCommand)
     }
   } else {
@@ -45,7 +46,7 @@ export async function runPublish(config, entry) {
   }
 
   if (isPrivate) {
-    pkgReporter.succeed("Private package, skipping publish")
+    pkgReporter.succeed(`Publish skipped (private)`)
   } else {
     pkgReporter.succeed("Publish successful")
   }

@@ -13,13 +13,11 @@ export async function runCommit(config) {
   const { precommit, postcommit, pretag, posttag, prepush, postpush } =
     config.hooks
   const VERSION_INSERT = "${version}"
-  const tagVersion =
-    config.releaseVersion || config.packages[0].getPackage().version
 
   if (shouldCommit) {
     const commitMsg =
       commitMessage.indexOf(VERSION_INSERT) > -1
-        ? commitMessage.replace(VERSION_INSERT, tagVersion)
+        ? commitMessage.replace(VERSION_INSERT, config.releaseVersion)
         : commitMessage
     const commitCmd = `git commit -m '${commitMsg}'`
 
@@ -39,9 +37,9 @@ export async function runCommit(config) {
   if (shouldTag) {
     const tagMsg =
       tagMessage.indexOf(VERSION_INSERT) > -1
-        ? tagMessage.replace(VERSION_INSERT, tagVersion)
+        ? tagMessage.replace(VERSION_INSERT, config.releaseVersion)
         : tagMessage
-    const tagCmd = `git tag -a -m '${tagMsg}' v${tagVersion}`
+    const tagCmd = `git tag -a -m '${tagMsg}' v${config.releaseVersion}`
 
     if (pretag) {
       await cmd({ config, cmd: pretag, step: "Pretag" })

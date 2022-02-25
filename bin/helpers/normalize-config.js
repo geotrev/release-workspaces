@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import semver from "semver"
 import fs from "fs"
 import glob from "glob"
 import path from "path"
@@ -78,8 +79,6 @@ function createPackageMeta(pkgs, dir) {
 export function normalizeConfig(config) {
   reporter.start("Preparing for release")
 
-  config.releaseVersion = null
-
   const rootPackage = JSON.parse(fs.readFileSync(ROOT_PACKAGE_PATH, "utf8"))
 
   // Set defaults
@@ -114,7 +113,29 @@ export function normalizeConfig(config) {
     validatePackagePaths(pkg.dir)
   }
 
-  reporter.succeed("Ready to release")
+  // Set the next version
 
+  const prevVersion = config.metadata.version || rootPackage.version
+
+  if (!prevVersion) {
+    reporter.fail(
+      "No version defined in project root. Add a 'version' field to config file or root package.json to proceed."
+    )
+    process.exit(1)
+  }
+
+  const releaseVersion = config.npm.increment
+    ? semver.inc(prevVersion, config.target, config.preid)
+    : prevVersion
+
+  if (!releaseVersion) {
+    reporter.fail("Invalid target version requested")
+    process.exit(1)
+  }
+
+  config.releaseVersion = releaseVersion
+  config.prevVersion = prevVersion
+
+  reporter.succeed("Ready to release")
   return config
 }

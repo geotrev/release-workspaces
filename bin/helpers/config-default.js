@@ -1,4 +1,7 @@
 export const configDefault = {
+  metadata: {
+    version: "",
+  },
   hooks: {
     prenpm: "",
     postnpm: "",

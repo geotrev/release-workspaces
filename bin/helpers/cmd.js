@@ -5,7 +5,9 @@ export async function cmd(meta, reporter = defaultReporter) {
   reporter.start(meta.step)
 
   if (meta.config.dryRun) {
-    reporter.info(meta.cmd)
+    if (meta.config.verbose) {
+      reporter.info(meta.cmd)
+    }
   } else {
     try {
       if (meta.config.verbose) {

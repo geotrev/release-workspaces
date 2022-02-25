@@ -7,8 +7,6 @@ import { logErr, pkgReporter } from "./helpers/reporter.js"
 import { ROOT_PACKAGE_FILE } from "./helpers/constants.js"
 
 function setDependencies(config, entry) {
-  pkgReporter.start("Increment co-dependencies")
-
   const { getPackage, dir } = entry
   const pkgContent = getPackage()
   const dependencies = []
@@ -35,7 +33,7 @@ function setDependencies(config, entry) {
           config.packageNames.some((pkgName) => pkgName === name)
         )
         .forEach((name) => {
-          pkgContent[type][name] = `^${pkgContent.version}`
+          pkgContent[type][name] = `^${config.releaseVersion}`
         })
     })
 
@@ -43,7 +41,9 @@ function setDependencies(config, entry) {
     const writeCommand = `fs.writeFileSync(path.resolve(dir, "${ROOT_PACKAGE_FILE}"), newPkgJson, "utf8")`
 
     if (config.dryRun) {
-      pkgReporter.info(writeCommand)
+      if (config.verbose) {
+        pkgReporter.info(writeCommand)
+      }
     } else {
       try {
         if (config.verbose) {
@@ -59,20 +59,18 @@ function setDependencies(config, entry) {
         logErr(e, "Something went wrong updating package.json")
       }
     }
-
-    pkgReporter.succeed("Co-dependencies updated")
-  } else {
-    pkgReporter.succeed("No co-dependencies detected")
   }
 }
 
-export async function runIncrement(config, entry, newVersion) {
-  pkgReporter.start(`Bump ${entry.name} to v${newVersion}`)
+export async function runIncrement(config, entry) {
+  pkgReporter.start("Version")
 
-  const incCommand = `npm version -w ${entry.name} ${newVersion} --no-git-tag-version`
+  const incCommand = `npm version -w ${entry.name} ${config.releaseVersion} --no-git-tag-version`
 
   if (config.dryRun) {
-    pkgReporter.info(incCommand)
+    if (config.verbose) {
+      pkgReporter.info(incCommand)
+    }
   } else {
     try {
       if (config.verbose) {
