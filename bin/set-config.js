@@ -25,12 +25,15 @@ export async function setConfig(config) {
   const packagePath = fs.readFileSync(path.resolve(cwd, ROOT_PACKAGE_FILE))
   const packageFile = JSON.parse(packagePath)
 
-  if (configFile.metadata.version) {
+  if (configFile.metadata?.version) {
     configFile.metadata.version = config.releaseVersion
     updateConfig = true
   }
 
-  if (packageFile.version === config.prevVersion) {
+  if (
+    typeof packageFile.version === "string" &&
+    packageFile.version === config.prevVersion
+  ) {
     packageFile.version = config.releaseVersion
     updatePkg = true
   }
