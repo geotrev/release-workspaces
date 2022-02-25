@@ -12,6 +12,10 @@ Table of Contents:
 - [Assumptions](#assumptions)
 - [Usage](#usage)
   - [Config File](#config-file)
+    - [`metadata`](#metadata)
+    - [`npm`](#npm)
+    - [`git`](#git)
+    - [`hooks`](#hooks)
   - [CLI Options](#cli-options)
     - [Release Flags](#release-flags)
     - [Config Flags](#config-flags)
@@ -20,15 +24,15 @@ Table of Contents:
 
 ## About
 
-This tool Brings the power of tools like Lerna and Release It! into one package, built with [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces) in mind. With `release-workspaces`, you can do the following:
+`release-workspaces` brings the power of tools like Lerna and Release It! into one package, built with [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces) in mind. Using this utility, you can do the following:
 
-- Version
-- Publish
-- Commit, tag, and push version/publish artifacts
+- Version packages
+- Publish packages
+- Commit, tag, and push to remote
 
 And More\*!
 
-<p><small>\*See <a href="#roadmap">roadmap</a></small></p>
+<p><small>*See <a href="#roadmap">roadmap</a></small></p>
 
 ## Assumptions
 
@@ -40,13 +44,17 @@ This tool assumes a few things about your workflow:
 
 ## Usage
 
-Using `release-workspaces` will mean a combination of a configuration (optional) and command line integration.
+`release-workspaces` is used primarily as a command line integration tool combined with an optional configuration file.
+
+The basic requirement is to have a `version` field defined in your root `package.json` (you can alternatively add [`metadata.version`](#metadata) to your config file). This will be the version of your packages, and is automatically updated for you after a release succeeds, but before the git step.
 
 Using the tool can be as simple as this:
 
 ```sh
 $ release-workspaces --target major
 ```
+
+With only a `version` field in your root `package.json`, mind you!
 
 Here's a more complex example of incrementing packages from prerelease, to release candidate, to minor version.
 
@@ -65,6 +73,20 @@ Define the config in one of two ways:
 
 - `.release-workspaces.json` file in monorepo root
 - `"release-workspaces"` field of package.json
+
+#### `metadata`
+
+Basic data about your project.
+
+Defaults:
+
+```json
+{
+  "metadata": {
+    "version": ""
+  }
+}
+```
 
 #### `npm`
 
@@ -101,7 +123,7 @@ Defaults:
 
 #### `hooks`
 
-Configures the tool to run scripts during the execution lifecycle. If you need to run an npm lifecycle script such as `preversion` or `prepublishOnly`, defining them in the package's `package.json` is all you need to do.
+Configures the tool to run scripts during the execution lifecycle. If you need to run an npm lifecycle script such as `preversion` or `prepublishOnly`, define them in the individual package's `package.json` to have them trigger automatically at the corresponding step.
 
 Available hooks:
 
@@ -112,17 +134,17 @@ Available hooks:
 
 ### CLI Options
 
-Arguments passed through the CLI will be passed verbatim to and validated by [semver](https://www.npmjs.com/package/semver) (`semver.inc`, specifically) under the hood. The script will exit if a combination of arguments is invalid (e.g., no `--target` but `config.npm.increment` is `true`).
+Arguments passed through the CLI will be passed verbatim to and validated by [semver](https://www.npmjs.com/package/semver) under the hood.
 
 #### Release Flags
 
-| Name              | Type    | Description                                                                        |
-| ----------------- | ------- | ---------------------------------------------------------------------------------- |
-| `--target`, `-t`  | string  | The target semver increment. E.g. `minor`, `prepatch`, `prerelease`, etc.          |
-| `--preid`, `-p`   | string  | Sets the prerelease id. E.g. `alpha`, `rc`, etc.                                   |
-| `--npm-tag`, `-n` | string  | If given, sets the npm tag. Otherwise uses the `preid`. E.g. `next`.               |
-| `--dry-run`, `-d` | boolean | If given, prints commands configured to run by the tool, but doesn't execute them. |
-| `--verbose`       | boolean | Like `dry-run`, but runs all commands.                                             |
+| Name              | Type    | Description                                                               |
+| ----------------- | ------- | ------------------------------------------------------------------------- |
+| `--target`, `-t`  | string  | The target semver increment. E.g. `minor`, `prepatch`, `prerelease`, etc. |
+| `--preid`, `-p`   | string  | Sets the prerelease id. E.g. `alpha`, `rc`, etc.                          |
+| `--npm-tag`, `-n` | string  | If given, sets the npm tag. Otherwise uses the `preid`. E.g. `next`.      |
+| `--dry-run`, `-d` | boolean | Prints output of tool but doesn't execute.                                |
+| `--verbose`, `-b` | boolean | Prints all commands (can be used with `--dry-run`)                        |
 
 Note that if `--npm-tag` isn't given, then the tool will fall back to the value given for `--preid`, else it will use `latest`.
 
@@ -135,6 +157,8 @@ Using config options via CLI will override your config. Useful for one-off relea
 You can use any of the existing config options as CLI flags by using the formula `--<key>.<property> [value]`. E.g., change the default or user-configured commit message: `--git.commitMessage "chore: release ${version}"`.
 
 Similarly, you can negate any boolean option by prepending `--no-` to it. E.g., `--no-git.commit`.
+
+And yes, you can even specify a version this way with `--metadata.version`.
 
 ## Cheatsheet
 
@@ -154,8 +178,3 @@ Here are a few handy examples of how to achieve certain release results:
 ## Roadmap
 
 - [ ] Automate GitHub/GitLab releases
-
-### TODO
-
-- refactor: Version all, then publish all
-- feat: Derive version from config or root package.json
