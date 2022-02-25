@@ -21,33 +21,28 @@ export async function runPublish(config, entry) {
   const pubCommand = `npm publish -w ${entry.name} --tag ${pubTag}`
   const addChangesCommand = "git add . -u"
 
-  if (config.dryRun) {
-    if (!isPrivate && config.verbose) {
-      pkgReporter.info(pubCommand)
-    }
-  } else {
-    try {
+  if (!isPrivate) {
+    if (config.dryRun) {
       if (config.verbose) {
         pkgReporter.info(addChangesCommand)
+        pkgReporter.info(pubCommand)
       }
-
-      await exec(addChangesCommand)
-
-      if (!isPrivate) {
+    } else {
+      try {
         if (config.verbose) {
+          pkgReporter.info(addChangesCommand)
           pkgReporter.info(pubCommand)
         }
 
+        await exec(addChangesCommand)
         await exec(pubCommand)
+      } catch (e) {
+        logErr(e, `Something went wrong releasing ${entry.name}`)
       }
-    } catch (e) {
-      logErr(e, `Something went wrong releasing ${entry.name}`)
     }
-  }
 
-  if (isPrivate) {
-    pkgReporter.succeed("Publish skipped (private)")
-  } else {
     pkgReporter.succeed("Publish successful")
+  } else {
+    pkgReporter.succeed("Publish skipped (private)")
   }
 }
