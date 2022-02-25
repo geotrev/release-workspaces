@@ -1,6 +1,6 @@
 {
   "name": "release-workspaces",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Automated versioning and publishing of projects using npm workspaces",
   "type": "module",
   "main": "bin/release.js",

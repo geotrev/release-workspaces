@@ -1,3 +1,10 @@
+## [0.1.6](https://github.com/geotrev/release-workspaces/compare/v0.1.5...v0.1.6) (2022-02-25)
+
+
+### Bug Fixes
+
+* fix incorrect retrieval of root package.json ([a3f4779](https://github.com/geotrev/release-workspaces/commit/a3f47795b85b4cc57a32fe05f6e7ee17878b4435))
+
 ## [0.1.5](https://github.com/geotrev/release-workspaces/compare/v0.1.4...v0.1.5) (2022-02-25)
 
 
