@@ -1,3 +1,11 @@
+## [0.1.4](https://github.com/geotrev/release-workspaces/compare/v0.1.3...v0.1.4) (2022-02-25)
+
+
+### Features
+
+* automatically update config and/or root package.json with release version after publish ([1457692](https://github.com/geotrev/release-workspaces/commit/145769260ea2949799495532fb3578205ac7d1bc))
+* derive version from root package or config file ([4e25626](https://github.com/geotrev/release-workspaces/commit/4e25626932e87154ecae6501838ab372df16ff6f))
+
 ## [0.1.3](https://github.com/geotrev/release-workspaces/compare/v0.1.2...v0.1.3) (2022-02-24)
 
 ### Bug Fixes
