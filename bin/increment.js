@@ -52,7 +52,7 @@ function setDependencies(config, entry) {
 
         fs.writeFileSync(
           path.resolve(dir, ROOT_PACKAGE_FILE),
-          newPkgJson + "\n",
+          newPkgJson,
           "utf8"
         )
       } catch (e) {

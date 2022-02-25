@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { cmd } from "./helpers/cmd.js"
+import { reportCmd } from "./helpers/cmd.js"
 
 export async function runCommit(config) {
   const {
@@ -22,13 +22,13 @@ export async function runCommit(config) {
     const commitCmd = `git commit -m '${commitMsg}'`
 
     if (precommit) {
-      await cmd({ config, cmd: precommit, step: "Precommit" })
+      await reportCmd({ config, cmd: precommit, step: "Precommit" })
     }
 
-    await cmd({ config, cmd: commitCmd, step: "Commit" })
+    await reportCmd({ config, cmd: commitCmd, step: "Commit" })
 
     if (postcommit) {
-      await cmd({ config, cmd: postcommit, step: "Postcommit" })
+      await reportCmd({ config, cmd: postcommit, step: "Postcommit" })
     }
   }
 
@@ -42,13 +42,13 @@ export async function runCommit(config) {
     const tagCmd = `git tag -a -m '${tagMsg}' v${config.releaseVersion}`
 
     if (pretag) {
-      await cmd({ config, cmd: pretag, step: "Pretag" })
+      await reportCmd({ config, cmd: pretag, step: "Pretag" })
     }
 
-    await cmd({ config, cmd: tagCmd, step: "Tag" })
+    await reportCmd({ config, cmd: tagCmd, step: "Tag" })
 
     if (posttag) {
-      await cmd({ config, cmd: posttag, step: "Posttag" })
+      await reportCmd({ config, cmd: posttag, step: "Posttag" })
     }
   }
 
@@ -58,13 +58,13 @@ export async function runCommit(config) {
     const pushCmd = "git push --follow-tags"
 
     if (prepush) {
-      await cmd({ config, cmd: prepush, step: "Prepush" })
+      await reportCmd({ config, cmd: prepush, step: "Prepush" })
     }
 
-    await cmd({ config, cmd: pushCmd, step: "Push" })
+    await reportCmd({ config, cmd: pushCmd, step: "Push" })
 
     if (postpush) {
-      await cmd({ config, cmd: postpush, step: "Postpush" })
+      await reportCmd({ config, cmd: postpush, step: "Postpush" })
     }
   }
 }

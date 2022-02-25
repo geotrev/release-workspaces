@@ -10,7 +10,7 @@ function parsePreId(version) {
 }
 
 export async function runPublish(config, entry) {
-  pkgReporter.start(`Publish`)
+  pkgReporter.start("Publish")
 
   const isPrivate = entry.getPackage().private
   const pubTag =
@@ -46,7 +46,7 @@ export async function runPublish(config, entry) {
   }
 
   if (isPrivate) {
-    pkgReporter.succeed(`Publish skipped (private)`)
+    pkgReporter.succeed("Publish skipped (private)")
   } else {
     pkgReporter.succeed("Publish successful")
   }

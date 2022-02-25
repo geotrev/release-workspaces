@@ -3,11 +3,12 @@
 import yargs from "yargs"
 import { findUpSync } from "find-up"
 import fs from "fs"
+import { CONFIG_NAME, ROOT_CONFIG_FILE } from "./constants.js"
 
 export function getArgs(userArgs) {
-  const configPath = findUpSync([".release-workspaces.json"])
+  const configPath = findUpSync([ROOT_CONFIG_FILE])
   const config = configPath
-    ? JSON.parse(fs.readFileSync(configPath))
+    ? JSON.parse(fs.readFileSync(configPath, "utf8"))
     : userArgs || {}
 
   return yargs(process.argv.slice(2))
@@ -39,6 +40,6 @@ export function getArgs(userArgs) {
       describe: "The npm tag. Falls back to preid or 'latest'.",
     })
     .config(config)
-    .pkgConf("release-workspaces")
+    .pkgConf(CONFIG_NAME)
     .parse()
 }
