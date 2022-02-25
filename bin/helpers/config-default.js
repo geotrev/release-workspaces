@@ -1,13 +1,7 @@
 export const configDefault = {
-  increment: {
-    codependencies: true,
-    rangePrefix: "^",
-  },
   hooks: {
-    preincrement: "",
-    postincrement: "",
-    prepublish: "",
-    postpublish: "",
+    prenpm: "",
+    postnpm: "",
     precommit: "",
     postcommit: "",
     pretag: "",

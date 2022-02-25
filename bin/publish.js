@@ -10,7 +10,7 @@ function parsePreId(entry) {
   return parts[0]
 }
 
-export async function publish(config, entry) {
+export async function runPublish(config, entry) {
   pkgReporter.start(`Publish ${entry.name}`)
 
   const isPrivate = entry.getPackage().private

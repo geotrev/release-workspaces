@@ -1,7 +1,7 @@
 import { exec } from "./exec-promise.js"
 import { reporter as defaultReporter, logErr } from "./reporter.js"
 
-export async function triggerCmd(meta, reporter = defaultReporter) {
+export async function cmd(meta, reporter = defaultReporter) {
   reporter.start(meta.step)
 
   if (meta.config.dryRun) {

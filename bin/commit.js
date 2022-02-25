@@ -1,12 +1,8 @@
 #!/usr/bin/env node
 
-import { triggerCmd } from "./helpers/trigger-cmd.js"
+import { cmd } from "./helpers/cmd.js"
 
-function getCurrentVersion(config) {
-  return config.packages[0].getPackage().version
-}
-
-export async function commit(config) {
+export async function runCommit(config) {
   const {
     commitMessage,
     tagMessage,
@@ -17,7 +13,8 @@ export async function commit(config) {
   const { precommit, postcommit, pretag, posttag, prepush, postpush } =
     config.hooks
   const VERSION_INSERT = "${version}"
-  const tagVersion = config.releaseVersion || getCurrentVersion(config)
+  const tagVersion =
+    config.releaseVersion || config.packages[0].getPackage().version
 
   if (shouldCommit) {
     const commitMsg =
@@ -27,13 +24,13 @@ export async function commit(config) {
     const commitCmd = `git commit -m '${commitMsg}'`
 
     if (precommit) {
-      await triggerCmd({ config, cmd: precommit, step: "Precommit" })
+      await cmd({ config, cmd: precommit, step: "Precommit" })
     }
 
-    await triggerCmd({ config, cmd: commitCmd, step: "Commit" })
+    await cmd({ config, cmd: commitCmd, step: "Commit" })
 
     if (postcommit) {
-      await triggerCmd({ config, cmd: postcommit, step: "Postcommit" })
+      await cmd({ config, cmd: postcommit, step: "Postcommit" })
     }
   }
 
@@ -47,13 +44,13 @@ export async function commit(config) {
     const tagCmd = `git tag -a -m '${tagMsg}' v${tagVersion}`
 
     if (pretag) {
-      await triggerCmd({ config, cmd: pretag, step: "Pretag" })
+      await cmd({ config, cmd: pretag, step: "Pretag" })
     }
 
-    await triggerCmd({ config, cmd: tagCmd, step: "Tag" })
+    await cmd({ config, cmd: tagCmd, step: "Tag" })
 
     if (posttag) {
-      await triggerCmd({ config, cmd: posttag, step: "Posttag" })
+      await cmd({ config, cmd: posttag, step: "Posttag" })
     }
   }
 
@@ -63,13 +60,13 @@ export async function commit(config) {
     const pushCmd = "git push --follow-tags"
 
     if (prepush) {
-      await triggerCmd({ config, cmd: prepush, step: "Prepush" })
+      await cmd({ config, cmd: prepush, step: "Prepush" })
     }
 
-    await triggerCmd({ config, cmd: pushCmd, step: "Push" })
+    await cmd({ config, cmd: pushCmd, step: "Push" })
 
     if (postpush) {
-      await triggerCmd({ config, cmd: postpush, step: "Postpush" })
+      await cmd({ config, cmd: postpush, step: "Postpush" })
     }
   }
 }
