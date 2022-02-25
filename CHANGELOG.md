@@ -1,3 +1,10 @@
+## [0.1.5](https://github.com/geotrev/release-workspaces/compare/v0.1.4...v0.1.5) (2022-02-25)
+
+
+### Bug Fixes
+
+* optional chain check when writing version back to package.json ([c0545f5](https://github.com/geotrev/release-workspaces/commit/c0545f5059abfcc1f080a58e425db2a78a97e669))
+
 ## [0.1.4](https://github.com/geotrev/release-workspaces/compare/v0.1.3...v0.1.4) (2022-02-25)
 
 
