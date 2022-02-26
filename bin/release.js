@@ -1,32 +1,23 @@
 #!/usr/bin/env node
 
 import { getArgs } from "./helpers/get-args.js"
-import { normalizeConfig } from "./helpers/normalize-config.js"
 import { reportCmd } from "./helpers/cmd.js"
 import { setRootVersion } from "./helpers/set-root-version.js"
-import { hasUnstaged } from "./helpers/has-unstaged.js"
 
 import { runNpm } from "./npm.js"
 import { runCommit } from "./commit.js"
-import { exitWithError } from "./helpers/reporter.js"
+import { initialize } from "./initialize.js"
 
 export async function release() {
   const config = getArgs()
-  normalizeConfig(config)
+
+  await initialize(config)
+
   const {
-    dryRun,
     npm: { increment, publish },
     hooks: { prenpm, postnpm },
-    git: { requireCleanDir, commit, tag },
+    git: { commit, tag },
   } = config
-
-  const unstaged = await hasUnstaged()
-  if (requireCleanDir && !dryRun && unstaged) {
-    exitWithError(
-      "Unstaged changes!",
-      "You must have a clean working directory to release. Use --no-git.requireCleanDir to ignore this error."
-    )
-  }
 
   // Increment version and publish to npm
 

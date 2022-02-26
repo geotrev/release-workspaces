@@ -77,8 +77,6 @@ function createPackageMeta(pkgs, dir) {
 }
 
 export function normalizeConfig(config) {
-  reporter.start("Preparing for release")
-
   const rootPackage = JSON.parse(fs.readFileSync(ROOT_PACKAGE_PATH, "utf8"))
 
   // Set defaults
@@ -135,7 +133,4 @@ export function normalizeConfig(config) {
 
   config.releaseVersion = releaseVersion
   config.prevVersion = prevVersion
-
-  reporter.succeed("Ready to release")
-  return config
 }

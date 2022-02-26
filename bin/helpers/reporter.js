@@ -6,8 +6,6 @@ export const reporter = ora()
 export const pkgReporter = ora({ indent: 4 })
 
 export function exitWithError(error, message) {
-  /* eslint-disable-next-line no-console */
-  console.error("Error:", error)
-  reporter.fail(message)
+  reporter.fail(`Error: ${message}`)
   process.exit(1)
 }
