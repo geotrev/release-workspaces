@@ -27,7 +27,7 @@
 
 ## About
 
-`release-workspaces` brings the power of tools like Lerna and Release It! into one package, built with [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces) in mind. Using this utility, you can do the following:
+`release-workspaces` brings the power of tools like Lerna and Release It! into one package, built to work with [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces). Using this utility, you can do the following:
 
 - Version packages
 - Publish packages
@@ -141,13 +141,14 @@ Arguments passed through the CLI will be passed verbatim to and validated by [se
 
 #### Release Flags
 
-| Name              | Type    | Description                                                               |
-| ----------------- | ------- | ------------------------------------------------------------------------- |
-| `--target`, `-t`  | string  | The target semver increment. E.g. `minor`, `prepatch`, `prerelease`, etc. |
-| `--preid`, `-p`   | string  | Sets the prerelease id. E.g. `alpha`, `rc`, etc.                          |
-| `--npm-tag`, `-n` | string  | If given, sets the npm tag. Otherwise uses the `preid`. E.g. `next`.      |
-| `--dry-run`, `-d` | boolean | Prints output of tool but doesn't execute.                                |
-| `--verbose`, `-b` | boolean | Prints all commands (can be used with `--dry-run`)                        |
+| Name                   | Type    | Description                                                                  |
+| ---------------------- | ------- | ---------------------------------------------------------------------------- |
+| `--target`, `-t`       | string  | The target semver increment. E.g. `minor`, `prepatch`, `prerelease`, etc.    |
+| `--increment-to`, `-s` | string  | A specific version to publish. E.g., `3.0.0`, `3.0.0-rc.2`, etc.             |
+| `--preid`, `-p`        | string  | Sets the prerelease id. E.g. `alpha`, `rc`, etc.                             |
+| `--npm-tag`, `-n`      | string  | If given, sets the npm publish tag. Otherwise uses the `preid`. E.g. `next`. |
+| `--dry-run`, `-d`      | boolean | Prints normal output but doesn't execute.                                    |
+| `--verbose`, `-b`      | boolean | Prints all commands (can be used with `--dry-run`/`-d`).                     |
 
 Note that if `--npm-tag` isn't given, then the tool will fall back to the value given for `--preid`, else it will use `latest`.
 
@@ -165,7 +166,7 @@ And yes, you can even specify a version this way with `--metadata.version`.
 
 ## Cheatsheet
 
-Here are a few handy examples of how to achieve certain release results with CLI flags.
+Here are a few handy examples of how to achieve certain release results with CLI flags. Replace `minor` with your intended release increment.
 
 | Description                     | Example                                                                                    |
 | ------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -173,7 +174,7 @@ Here are a few handy examples of how to achieve certain release results with CLI
 | Prerelease                      | `$ release-workspaces -t preminor -p alpha`                                                |
 | Increment prerelease            | `$ release-workspaces -t prerelease`                                                       |
 | Update prerelease id w/ npm tag | `$ release-workspaces -t prerelease -p rc -n next`                                         |
-| Prerelease to major/minor/patch | `$ release-workspaces -t minor`                                                            |
+| Increment to a specific version | `$ release-workspaces -s 3.0.0`                                                            |
 | Skip npm version operation      | `$ release-workspaces --no-npm.increment`                                                  |
 | Skip npm publish operation      | `$ release-workspaces -t minor --no-npm.publish`                                           |
 | Skip all npm operations         | `$ release-workspaces --no-npm.increment --no-npm.publish`                                 |
@@ -181,7 +182,17 @@ Here are a few handy examples of how to achieve certain release results with CLI
 | Skip git operation              | `$ release-workspaces -t minor --no-git.[commit/tag/push]`                                 |
 | Set custom messaging            | `$ release-workspaces -t minor --git.[commitMessage/tagMessage] "Custom msg: \${version}"` |
 
+## Clarifications & Gotchas
+
+There are some contradictory or otherwise unclear config combinations to note.
+
+- `config.git.push` is ignored if both `config.git.commit` and `config.git.tag` are `false`.
+- `--increment-to` is ignored if `config.npm.increment` is `false`.
+- `--increment-to` will override `--target`/`-t`.
+- `--increment-to`, if a valid semver version, will automatically be parsed for an npm tag during the publish step. You can optionally provide `--npm-tag` to override this.
+
 ## Roadmap
 
 - [ ] Automate GitHub/GitLab releases
 - [ ] Rollback changes if failures occur mid-release
+- [ ] Respect non-caret ranges

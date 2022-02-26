@@ -5,7 +5,7 @@ import fs from "fs"
 import glob from "glob"
 import path from "path"
 import { ROOT_PACKAGE_FILE } from "./constants.js"
-import { reporter } from "./reporter.js"
+import { exitWithError, reporter } from "./reporter.js"
 import { configDefault } from "./config-default.js"
 
 const cwd = process.cwd()
@@ -122,9 +122,25 @@ export function normalizeConfig(config) {
     process.exit(1)
   }
 
-  const releaseVersion = config.npm.increment
-    ? semver.inc(prevVersion, config.target, config.preid)
-    : prevVersion
+  const isValidCustomIncrement =
+    config.npm.increment &&
+    typeof config.incrementTo === "string" &&
+    semver.valid(config.incrementTo) &&
+    semver.gt(config.incrementTo, prevVersion)
+
+  let releaseVersion
+  if (isValidCustomIncrement) {
+    releaseVersion = config.incrementTo
+  } else if (!isValidCustomIncrement) {
+    exitWithError(
+      "Bad custom version",
+      `Custom version '${config.incrementTo}' is either not a string, an invalid semver string, or less than the existing version ('${prevVersion}').`
+    )
+  } else if (config.npm.increment) {
+    releaseVersion = semver.inc(prevVersion, config.target, config.preid)
+  } else {
+    releaseVersion = prevVersion
+  }
 
   if (!releaseVersion) {
     reporter.fail("Invalid target version requested")

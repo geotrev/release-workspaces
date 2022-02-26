@@ -27,7 +27,7 @@ export function getArgs(userArgs) {
     .option("target", {
       alias: "t",
       type: "string",
-      describe: "The semver target.",
+      describe: "The semver release.",
     })
     .option("preid", {
       alias: "p",
@@ -37,7 +37,12 @@ export function getArgs(userArgs) {
     .option("npm-tag", {
       alias: "n",
       type: "string",
-      describe: "The npm tag. Falls back to preid or 'latest'.",
+      describe: "The npm publish tag. Falls back to preid or 'latest'.",
+    })
+    .option("increment-to", {
+      alias: "s",
+      type: "string",
+      describe: "The specific version to publish.",
     })
     .config(config)
     .pkgConf(CONFIG_NAME)

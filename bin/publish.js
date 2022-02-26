@@ -13,7 +13,7 @@ export async function runPublish(config, entry) {
   pkgReporter.start("Publish")
 
   const isPrivate = entry.getPackage().private
-  const pubTag =
+  const tag =
     config.npmTag ||
     config.preid ||
     parsePreId(config.releaseVersion) ||
@@ -21,7 +21,7 @@ export async function runPublish(config, entry) {
 
   if (!isPrivate) {
     const addChangesCommand = "git add . -u"
-    const pubCommand = `npm publish -w ${entry.name} --tag ${pubTag}`
+    const pubCommand = `npm publish -w ${entry.name} --tag ${tag}`
 
     await cmd(addChangesCommand, config, pkgReporter)
     await cmd(pubCommand, config, pkgReporter)
