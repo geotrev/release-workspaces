@@ -6,9 +6,9 @@ import {
   CONFIG_NAME,
   ROOT_CONFIG_FILE,
   ROOT_PACKAGE_FILE,
-} from "./helpers/constants.js"
-import { cmd } from "./helpers/cmd.js"
-import { reporter, logErr } from "./helpers/reporter.js"
+} from "./constants.js"
+import { cmd } from "./cmd.js"
+import { reporter, exitWithError } from "./reporter.js"
 
 export async function setConfig(config) {
   reporter.start("Update root version")
@@ -58,7 +58,7 @@ export async function setConfig(config) {
           "utf8"
         )
       } catch (e) {
-        logErr(
+        exitWithError(
           e,
           "Unable to update config. Rerun with `--no-npm.increment --no-npm.publish` to try again."
         )
@@ -82,7 +82,7 @@ export async function setConfig(config) {
           "utf8"
         )
       } catch (e) {
-        logErr(
+        exitWithError(
           e,
           "Unable to update package.json. Rerun with `--no-npm.increment --no-npm.publish` to try again."
         )

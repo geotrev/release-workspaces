@@ -1,5 +1,5 @@
 import { exec } from "./exec-promise.js"
-import { reporter as defaultReporter, logErr } from "./reporter.js"
+import { reporter as defaultReporter, exitWithError } from "./reporter.js"
 
 export async function cmd(command, config, reporter = defaultReporter) {
   if (config.dryRun) {
@@ -14,7 +14,7 @@ export async function cmd(command, config, reporter = defaultReporter) {
 
       await exec(command)
     } catch (e) {
-      logErr(e, `Unable to complete command: ${command}`)
+      exitWithError(e, `Unable to complete command: ${command}`)
     }
   }
 }

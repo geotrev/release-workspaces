@@ -2,7 +2,7 @@
 
 import fs from "fs"
 import path from "path"
-import { logErr, pkgReporter } from "./helpers/reporter.js"
+import { exitWithError, pkgReporter } from "./helpers/reporter.js"
 import { ROOT_PACKAGE_FILE } from "./helpers/constants.js"
 import { cmd } from "./helpers/cmd.js"
 
@@ -56,7 +56,7 @@ function setDependencies(config, entry) {
           "utf8"
         )
       } catch (e) {
-        logErr(e, "Unable to update package.json.")
+        exitWithError(e, "Unable to update package.json.")
       }
     }
   }

@@ -19,6 +19,7 @@ export const configDefault = {
   git: {
     commitMessage: "Release ${version}",
     tagMessage: "Release ${version}",
+    requireCleanDir: true,
     commit: true,
     tag: true,
     push: true,

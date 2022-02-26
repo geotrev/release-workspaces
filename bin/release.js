@@ -2,11 +2,13 @@
 
 import { getArgs } from "./helpers/get-args.js"
 import { normalizeConfig } from "./helpers/normalize-config.js"
+import { reportCmd } from "./helpers/cmd.js"
+import { setConfig } from "./helpers/set-config.js"
+import { hasUnstaged } from "./helpers/has-unstaged.js"
 
 import { runNpm } from "./npm.js"
 import { runCommit } from "./commit.js"
-import { setConfig } from "./set-config.js"
-import { reportCmd } from "./helpers/cmd.js"
+import { exitWithError } from "./helpers/reporter.js"
 
 export async function release() {
   const config = getArgs()
@@ -14,8 +16,16 @@ export async function release() {
   const {
     npm: { increment, publish },
     hooks: { prenpm, postnpm },
-    git: { commit, tag },
+    git: { requireCleanDir, commit, tag },
   } = config
+
+  const unstaged = await hasUnstaged()
+  if (requireCleanDir && unstaged) {
+    exitWithError(
+      "Unstaged changes!",
+      "You must have a clean working directory to release. Use --no-git.requireCleanDir to ignore this error."
+    )
+  }
 
   // Increment version and publish to npm
 
