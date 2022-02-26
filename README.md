@@ -114,6 +114,7 @@ Defaults:
 ```json
 {
   "git": {
+    "requireCleanDir": true,
     "commitMessage": "Release ${version}",
     "tagMessage": "Release ${version}",
     "commit": true,
@@ -164,18 +165,21 @@ And yes, you can even specify a version this way with `--metadata.version`.
 
 ## Cheatsheet
 
-Here are a few handy examples of how to achieve certain release results:
+Here are a few handy examples of how to achieve certain release results with CLI flags.
 
-| Description                     | Example                                                              |
-| ------------------------------- | -------------------------------------------------------------------- |
-| Do everything                   | `$ release-workspaces --target minor`                                |
-| Prerelease                      | `$ release-workspaces --target preminor --preid alpha`               |
-| Increment prerelease            | `$ release-workspaces --target prerelease`                           |
-| Update prerelease id w/ npm tag | `$ release-workspaces --target prerelease --preid rc --npm-tag next` |
-| Prerelease to major/minor/patch | `$ release-workspaces --target minor`                                |
-| Skip npm version operation      | `$ release-workspaces --no-npm.increment`                            |
-| Skip npm publish operation      | `$ release-workspaces --target minor --no-npm.publish`               |
-| Skip git operation              | `$ release-workspaces --target minor --no-git.[commit/tag/push]`     |
+| Description                     | Example                                                                                    |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
+| Do everything                   | `$ release-workspaces -t minor`                                                            |
+| Prerelease                      | `$ release-workspaces -t preminor -p alpha`                                                |
+| Increment prerelease            | `$ release-workspaces -t prerelease`                                                       |
+| Update prerelease id w/ npm tag | `$ release-workspaces -t prerelease -p rc -n next`                                         |
+| Prerelease to major/minor/patch | `$ release-workspaces -t minor`                                                            |
+| Skip npm version operation      | `$ release-workspaces --no-npm.increment`                                                  |
+| Skip npm publish operation      | `$ release-workspaces -t minor --no-npm.publish`                                           |
+| Skip all npm operations         | `$ release-workspaces --no-npm.increment --no-npm.publish`                                 |
+| Skip clean directory check      | `$ release-workspaces -t minor --no-git.requireCleanDir`                                   |
+| Skip git operation              | `$ release-workspaces -t minor --no-git.[commit/tag/push]`                                 |
+| Set custom messaging            | `$ release-workspaces -t minor --git.[commitMessage/tagMessage] "Custom msg: \${version}"` |
 
 ## Roadmap
 
