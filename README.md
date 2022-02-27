@@ -23,6 +23,7 @@
     - [Release Flags](#release-flags)
     - [Config Flags](#config-flags)
 - [Cheatsheet](#cheatsheet)
+- [Clarifications & Gotchas](#clarifications--gotchas)
 - [Roadmap](#roadmap)
 
 ## About
