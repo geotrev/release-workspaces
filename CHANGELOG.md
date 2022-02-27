@@ -1,3 +1,12 @@
+# [0.2.0](https://github.com/geotrev/release-workspaces/compare/v0.1.6...v0.2.0) (2022-02-27)
+
+
+### Features
+
+* adds ref status check during initialize ([89a6fe3](https://github.com/geotrev/release-workspaces/commit/89a6fe3bcb0f74481ff25f2c60422d331fdb1a64))
+* enable specific/custom publish version ([82b8bdc](https://github.com/geotrev/release-workspaces/commit/82b8bdc5779edffce2b91abf3d26242b2cda2ab3))
+* prevent release if working dir isn't clean ([9818e71](https://github.com/geotrev/release-workspaces/commit/9818e71e31b7eacca8528848fe6482636a0cf9ef))
+
 ## [0.1.7](https://github.com/geotrev/release-workspaces/compare/v0.1.6...v0.1.7) (2022-02-27)
 
 
