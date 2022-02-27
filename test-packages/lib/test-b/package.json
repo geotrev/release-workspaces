@@ -1,12 +1,12 @@
 {
   "name": "@release-workspaces-test/b",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "dependencies": {
-    "@release-workspaces-test/a": "^0.5.4",
-    "@release-workspaces-test/c": "^0.5.4"
+    "@release-workspaces-test/a": "^0.5.5",
+    "@release-workspaces-test/c": "^0.5.5"
   },
   "devDependencies": {
-    "@release-workspaces-test/e": "^0.5.4"
+    "@release-workspaces-test/e": "^0.5.5"
   },
   "publishConfig": {
     "access": "public"

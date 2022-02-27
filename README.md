@@ -115,6 +115,8 @@ Defaults:
 {
   "git": {
     "requireCleanDir": true,
+    "requireSync": true,
+    "skipChecks": false,
     "commitMessage": "Release ${version}",
     "tagMessage": "Release ${version}",
     "commit": true,
@@ -158,11 +160,9 @@ Similarly, if you run a git-only release (no version, no publish), the tool will
 
 Using config options via CLI will override your config. Useful for one-off releases and otherwise augmenting a base configuration for release types (alpha release, release candidate, no-increment publish, etc).
 
-You can use any of the existing config options as CLI flags by using the formula `--<key>.<property> [value]`. E.g., change the default or user-configured commit message: `--git.commitMessage "chore: release ${version}"`.
+You can use any of the existing config options as CLI flags by using the formula `--<key>.<property> [value]`. E.g., change the default or user-configured commit message: `--git.commitMessage "chore: release ${version}"` or disable all git checks with `--git.skipChecks`.
 
-Similarly, you can negate any boolean option by prepending `--no-` to it. E.g., `--no-git.commit`.
-
-And yes, you can even specify a version this way with `--metadata.version`.
+Similarly, you can negate any boolean option by prepending `--no-` to it. E.g., `--no-git.requireCleanDir`.
 
 ## Cheatsheet
 
