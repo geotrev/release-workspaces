@@ -1,42 +1,31 @@
-# [0.2.0](https://github.com/geotrev/release-workspaces/compare/v0.1.6...v0.2.0) (2022-02-27)
-
-
-### Features
-
-* adds ref status check during initialize ([89a6fe3](https://github.com/geotrev/release-workspaces/commit/89a6fe3bcb0f74481ff25f2c60422d331fdb1a64))
-* enable specific/custom publish version ([82b8bdc](https://github.com/geotrev/release-workspaces/commit/82b8bdc5779edffce2b91abf3d26242b2cda2ab3))
-* prevent release if working dir isn't clean ([9818e71](https://github.com/geotrev/release-workspaces/commit/9818e71e31b7eacca8528848fe6482636a0cf9ef))
+## [0.2.0](https://github.com/geotrev/release-workspaces/compare/v0.1.7...v0.2.0) (2022-02-27)
 
 ## [0.1.7](https://github.com/geotrev/release-workspaces/compare/v0.1.6...v0.1.7) (2022-02-27)
 
-
 ### Features
 
-* adds ref status check during initialize ([89a6fe3](https://github.com/geotrev/release-workspaces/commit/89a6fe3bcb0f74481ff25f2c60422d331fdb1a64))
-* enable specific/custom publish version ([82b8bdc](https://github.com/geotrev/release-workspaces/commit/82b8bdc5779edffce2b91abf3d26242b2cda2ab3))
-* prevent release if working dir isn't clean ([9818e71](https://github.com/geotrev/release-workspaces/commit/9818e71e31b7eacca8528848fe6482636a0cf9ef))
+- adds ref status check during initialize ([89a6fe3](https://github.com/geotrev/release-workspaces/commit/89a6fe3bcb0f74481ff25f2c60422d331fdb1a64))
+- enable specific/custom publish version ([82b8bdc](https://github.com/geotrev/release-workspaces/commit/82b8bdc5779edffce2b91abf3d26242b2cda2ab3))
+- prevent release if working dir isn't clean ([9818e71](https://github.com/geotrev/release-workspaces/commit/9818e71e31b7eacca8528848fe6482636a0cf9ef))
 
 ## [0.1.6](https://github.com/geotrev/release-workspaces/compare/v0.1.5...v0.1.6) (2022-02-25)
 
-
 ### Bug Fixes
 
-* fix incorrect retrieval of root package.json ([a3f4779](https://github.com/geotrev/release-workspaces/commit/a3f47795b85b4cc57a32fe05f6e7ee17878b4435))
+- fix incorrect retrieval of root package.json ([a3f4779](https://github.com/geotrev/release-workspaces/commit/a3f47795b85b4cc57a32fe05f6e7ee17878b4435))
 
 ## [0.1.5](https://github.com/geotrev/release-workspaces/compare/v0.1.4...v0.1.5) (2022-02-25)
 
-
 ### Bug Fixes
 
-* optional chain check when writing version back to package.json ([c0545f5](https://github.com/geotrev/release-workspaces/commit/c0545f5059abfcc1f080a58e425db2a78a97e669))
+- optional chain check when writing version back to package.json ([c0545f5](https://github.com/geotrev/release-workspaces/commit/c0545f5059abfcc1f080a58e425db2a78a97e669))
 
 ## [0.1.4](https://github.com/geotrev/release-workspaces/compare/v0.1.3...v0.1.4) (2022-02-25)
 
-
 ### Features
 
-* automatically update config and/or root package.json with release version after publish ([1457692](https://github.com/geotrev/release-workspaces/commit/145769260ea2949799495532fb3578205ac7d1bc))
-* derive version from root package or config file ([4e25626](https://github.com/geotrev/release-workspaces/commit/4e25626932e87154ecae6501838ab372df16ff6f))
+- automatically update config and/or root package.json with release version after publish ([1457692](https://github.com/geotrev/release-workspaces/commit/145769260ea2949799495532fb3578205ac7d1bc))
+- derive version from root package or config file ([4e25626](https://github.com/geotrev/release-workspaces/commit/4e25626932e87154ecae6501838ab372df16ff6f))
 
 ## [0.1.3](https://github.com/geotrev/release-workspaces/compare/v0.1.2...v0.1.3) (2022-02-24)
 
