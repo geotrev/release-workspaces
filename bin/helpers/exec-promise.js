@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import { exec as e } from "child_process"
+import { exec as execAsync } from "child_process"
 import { promisify } from "util"
 
-const promisedExec = promisify(e)
+const execPromise = promisify(execAsync)
 
 export const exec = async (cmd, opts = {}) =>
-  promisedExec(cmd, { stdio: "ignore", cwd: process.cwd(), ...opts })
+  execPromise(cmd, { stdio: "ignore", cwd: process.cwd(), ...opts })

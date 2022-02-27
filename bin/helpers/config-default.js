@@ -20,6 +20,8 @@ export const configDefault = {
     commitMessage: "Release ${version}",
     tagMessage: "Release ${version}",
     requireCleanDir: true,
+    requireSync: true,
+    skipChecks: false,
     commit: true,
     tag: true,
     push: true,
