@@ -54,7 +54,7 @@ The basic requirement is to have a `version` field defined in your root `package
 Using the tool can be as simple as this:
 
 ```sh
-$ release-workspaces --target major
+$ release-workspaces --increment major
 ```
 
 With only a `version` field in your root `package.json`, mind you!
@@ -62,10 +62,10 @@ With only a `version` field in your root `package.json`, mind you!
 Here's a more complex example of incrementing packages from prerelease, to release candidate, to minor version.
 
 ```sh
-$ release-workspaces --target preminor --preid alpha # 0.1.0 -> 0.2.0-alpha.0
-$ release-workspaces --target prerelease # 0.2.0-alpha.1
-$ release-workspaces --target prerelease --preid rc --npm-tag next # 0.2.0-rc.0 @ next
-$ release-workspaces --target minor # 0.2.0
+$ release-workspaces --increment preminor --preid alpha # 0.1.0 -> 0.2.0-alpha.0
+$ release-workspaces --increment prerelease # 0.2.0-alpha.1
+$ release-workspaces --increment prerelease --preid rc --npm-tag next # 0.2.0-rc.0 @ next
+$ release-workspaces --increment minor # 0.2.0
 ```
 
 ### Config File
@@ -146,7 +146,7 @@ Arguments passed through the CLI will be passed verbatim to and validated by [se
 
 | Name                   | Type    | Description                                                                  |
 | ---------------------- | ------- | ---------------------------------------------------------------------------- |
-| `--target`, `-t`       | string  | The target semver increment. E.g. `minor`, `prepatch`, `prerelease`, etc.    |
+| `--increment`, `-i`    | string  | The release increment. E.g. `minor`, `prepatch`, `prerelease`, etc.          |
 | `--increment-to`, `-s` | string  | A specific version to publish. E.g., `3.0.0`, `3.0.0-rc.2`, etc.             |
 | `--preid`, `-p`        | string  | Sets the prerelease id. E.g. `alpha`, `rc`, etc.                             |
 | `--npm-tag`, `-n`      | string  | If given, sets the npm publish tag. Otherwise uses the `preid`. E.g. `next`. |
@@ -171,26 +171,28 @@ Here are a few handy examples of how to achieve certain release results with CLI
 
 | Description                     | Example                                                                                    |
 | ------------------------------- | ------------------------------------------------------------------------------------------ |
-| Do everything                   | `$ release-workspaces -t minor`                                                            |
-| Prerelease                      | `$ release-workspaces -t preminor -p alpha`                                                |
-| Increment prerelease            | `$ release-workspaces -t prerelease`                                                       |
-| Update prerelease id w/ npm tag | `$ release-workspaces -t prerelease -p rc -n next`                                         |
+| Do everything                   | `$ release-workspaces -i minor`                                                            |
+| Prerelease                      | `$ release-workspaces -i preminor -p alpha`                                                |
+| Increment prerelease            | `$ release-workspaces -i prerelease`                                                       |
+| Update prerelease id w/ npm tag | `$ release-workspaces -i prerelease -p rc -n next`                                         |
 | Increment to a specific version | `$ release-workspaces -s 3.0.0`                                                            |
-| Skip npm version operation      | `$ release-workspaces --no-npm.increment`                                                  |
-| Skip npm publish operation      | `$ release-workspaces -t minor --no-npm.publish`                                           |
+| Skip npm version                | `$ release-workspaces --no-npm.increment`                                                  |
+| Skip npm publish                | `$ release-workspaces -i minor --no-npm.publish`                                           |
 | Skip all npm operations         | `$ release-workspaces --no-npm.increment --no-npm.publish`                                 |
-| Skip clean directory check      | `$ release-workspaces -t minor --no-git.requireCleanDir`                                   |
-| Skip git operation              | `$ release-workspaces -t minor --no-git.[commit/tag/push]`                                 |
-| Set custom messaging            | `$ release-workspaces -t minor --git.[commitMessage/tagMessage] "Custom msg: \${version}"` |
+| Skip clean directory check      | `$ release-workspaces -i minor --no-git.requireCleanDir`                                   |
+| Skip git sync check             | `$ release-workspaces -i minor --no-git.requireSync`                                       |
+| Skip all git checks             | `$ release-workspaces -i minor --git.skipChecks`                                           |
+| Skip git operation              | `$ release-workspaces -i minor --no-git.[commit/tag/push]`                                 |
+| Set custom messaging            | `$ release-workspaces -i minor --git.[commitMessage/tagMessage] "Custom msg: \${version}"` |
 
 ## Clarifications & Gotchas
 
 There are some contradictory or otherwise unclear config combinations to note.
 
 - `config.git.push` is ignored if both `config.git.commit` and `config.git.tag` are `false`.
-- `--increment-to` is ignored if `config.npm.increment` is `false`.
-- `--increment-to` will override `--target`/`-t`.
-- `--increment-to`, if a valid semver version, will automatically be parsed for an npm tag during the publish step. You can optionally provide `--npm-tag` to override this.
+- `--increment-to`/`-s` is ignored if `config.npm.increment` is `false`.
+- `--increment-to`/`-s` will override `--increment`/`-i`.
+- `--increment-to`/`-s`, if valid version, will automatically be parsed for an npm tag during the publish step. You can optionally provide `--npm-tag` to override this.
 
 ## Roadmap
 

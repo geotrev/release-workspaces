@@ -11,7 +11,7 @@
     "prepare": "husky install",
     "test": "echo \"Error: no test specified\" && exit 0",
     "test:rw": "npm run test:increment && npm run test:clear-tag",
-    "test:increment": "release-workspaces -t patch --git.commitMessage 'chore: test release ${version}'",
+    "test:increment": "release-workspaces -i patch --git.commitMessage 'chore: test release ${version}'",
     "test:clear-tag": "git push --delete origin $(git describe --abbrev=0) && git tag -d $(git describe --abbrev=0)",
     "prettier:check": "prettier --config .prettierrc.json --check",
     "prettier:write": "prettier --config .prettierrc.json --write",

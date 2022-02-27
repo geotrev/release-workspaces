@@ -3,7 +3,7 @@ import { checkUnstaged, checkRefStatus } from "./helpers/git-helpers.js"
 import { reporter } from "./helpers/reporter.js"
 
 export async function initialize(config) {
-  reporter.start("Preparing for release...")
+  reporter.start("Preparing to release")
 
   normalizeConfig(config)
 

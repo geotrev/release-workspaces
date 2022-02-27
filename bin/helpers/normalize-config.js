@@ -5,7 +5,7 @@ import fs from "fs"
 import glob from "glob"
 import path from "path"
 import { ROOT_PACKAGE_FILE } from "./constants.js"
-import { exitWithError, reporter } from "./reporter.js"
+import { exitWithError } from "./reporter.js"
 import { configDefault } from "./config-default.js"
 
 const cwd = process.cwd()
@@ -20,8 +20,9 @@ function validatePackagePaths(dir) {
   const rootDirName = dirs[dirs.length - 1]
 
   if (dir.indexOf(rootDirName) === -1) {
-    reporter.fail(
-      `Workspace doesn't appear to exist in the current project: ${dir}`
+    exitWithError(
+      "Invalid root",
+      "Workspace directory(ies) are outside your current working directory."
     )
   }
 }
@@ -45,10 +46,10 @@ function normalizeConfigCategory(config, category) {
         continue
       }
 
-      reporter.fail(
+      exitWithError(
+        "Invalid config value",
         `Invalid value given to config.${category}.${key}, expected ${configDefaultType}`
       )
-      process.exit(1)
     }
   } else {
     config[category] = configDefault[category]
@@ -59,8 +60,10 @@ function createPackageMeta(pkgs, dir) {
   const pkgPath = path.resolve(dir, ROOT_PACKAGE_FILE)
 
   if (!fs.existsSync(pkgPath)) {
-    reporter.fail("Package root is missing package.json, unable to proceed")
-    process.exit(1)
+    exitWithError(
+      "No package.json",
+      "Package root is missing package.json, unable to proceed"
+    )
   }
 
   const getPackage = () => JSON.parse(fs.readFileSync(pkgPath, "utf8"))
@@ -89,14 +92,16 @@ export function normalizeConfig(config) {
   const workspaces = rootPackage.workspaces
 
   if (!Array.isArray(workspaces)) {
-    reporter.fail("This repository doesn't appear to have workspaces.")
-    process.exit(1)
+    exitWithError(
+      "No workspaces",
+      "This repository doesn't appear to have workspaces."
+    )
   } else {
     config.packages = workspaces
   }
 
-  // Create a complete list of workspace roots based on workspaces field entries
-  // E.g., sometimes wild cards can be used to target all sub-directories.
+  // Expand workspaces entries into a directory list.
+  // E.g., replace wildcards with full directory paths.
   const packageRoots = config.packages.reduce((roots, root) => {
     const paths = glob.sync(path.resolve(cwd, root))
     return [...roots, ...paths]
@@ -116,10 +121,10 @@ export function normalizeConfig(config) {
   const prevVersion = config.metadata.version || rootPackage.version
 
   if (!prevVersion) {
-    reporter.fail(
+    exitWithError(
+      "Missing version",
       "No version defined in project root. Add a 'version' field to config file or root package.json to proceed."
     )
-    process.exit(1)
   }
 
   let releaseVersion
@@ -139,14 +144,18 @@ export function normalizeConfig(config) {
       )
     }
   } else if (config.npm.increment) {
-    releaseVersion = semver.inc(prevVersion, config.target, config.preid)
+    releaseVersion = semver.inc(prevVersion, config.increment, config.preid)
   } else {
     releaseVersion = prevVersion
   }
 
   if (!releaseVersion) {
-    reporter.fail("Invalid target version requested")
-    process.exit(1)
+    exitWithError(
+      "Bad increment",
+      `Invalid version increment requested: ${
+        config.incrementTo || config.increment
+      }`
+    )
   }
 
   config.releaseVersion = releaseVersion

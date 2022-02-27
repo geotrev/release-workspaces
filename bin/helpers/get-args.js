@@ -3,7 +3,11 @@
 import yargs from "yargs"
 import { findUpSync } from "find-up"
 import fs from "fs"
-import { CONFIG_NAME, ROOT_CONFIG_FILE } from "./constants.js"
+import {
+  RELEASE_INCREMENTS,
+  CONFIG_NAME,
+  ROOT_CONFIG_FILE,
+} from "./constants.js"
 
 export function getArgs(userArgs) {
   const configPath = findUpSync([ROOT_CONFIG_FILE])
@@ -24,10 +28,16 @@ export function getArgs(userArgs) {
       type: "boolean",
       describe: "Prints commands, but doesn't execute them.",
     })
-    .option("target", {
-      alias: "t",
+    .option("increment-to", {
+      alias: "s",
       type: "string",
-      describe: "The semver release.",
+      describe: "The specific version to publish.",
+    })
+    .option("increment", {
+      alias: "i",
+      type: "string",
+      describe: "The release level to increment by.",
+      choices: RELEASE_INCREMENTS,
     })
     .option("preid", {
       alias: "p",
@@ -38,11 +48,6 @@ export function getArgs(userArgs) {
       alias: "n",
       type: "string",
       describe: "The npm publish tag. Falls back to preid or 'latest'.",
-    })
-    .option("increment-to", {
-      alias: "s",
-      type: "string",
-      describe: "The specific version to publish.",
     })
     .config(config)
     .pkgConf(CONFIG_NAME)
