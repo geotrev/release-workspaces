@@ -122,20 +122,22 @@ export function normalizeConfig(config) {
     process.exit(1)
   }
 
-  const isValidCustomIncrement =
-    config.npm.increment &&
-    typeof config.incrementTo === "string" &&
-    semver.valid(config.incrementTo) &&
-    semver.gt(config.incrementTo, prevVersion)
-
   let releaseVersion
-  if (isValidCustomIncrement) {
-    releaseVersion = config.incrementTo
-  } else if (!isValidCustomIncrement) {
-    exitWithError(
-      "Bad custom version",
-      `Custom version '${config.incrementTo}' is either not a string, an invalid semver string, or less than the existing version ('${prevVersion}').`
-    )
+
+  if (config.incrementTo) {
+    const isValidCustomIncrement =
+      config.npm.increment &&
+      semver.valid(config.incrementTo) &&
+      semver.gt(config.incrementTo, prevVersion)
+
+    if (isValidCustomIncrement) {
+      releaseVersion = config.incrementTo
+    } else {
+      exitWithError(
+        "Bad custom version",
+        `Custom version '${config.incrementTo}' is either not a string, an invalid semver string, or less than the existing version ('${prevVersion}').`
+      )
+    }
   } else if (config.npm.increment) {
     releaseVersion = semver.inc(prevVersion, config.target, config.preid)
   } else {
