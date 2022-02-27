@@ -36,7 +36,7 @@ export async function checkRefStatus(config) {
   await exec("git fetch && git remote update")
 
   const UPSTREAM_REF = "@{u}"
-  const base = (await exec(`git rev-parse @{0} ${UPSTREAM_REF}`)).stdout
+  const base = (await exec(`git merge-base @{0} ${UPSTREAM_REF}`)).stdout
   const local = (await exec("git rev-parse @{0}")).stdout
   const remote = (await exec(`git rev-parse ${UPSTREAM_REF}`)).stdout
 
@@ -58,6 +58,4 @@ export async function checkRefStatus(config) {
       "You're trying to release on a diverged branch. Sync to remote or try again with '--no-git.requireSync' to ignore this error'."
     )
   }
-
-  process.exit(0)
 }

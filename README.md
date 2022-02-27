@@ -184,8 +184,6 @@ Here are a few handy examples of how to achieve certain release results with CLI
 
 ## Clarifications & Gotchas
 
-There are some contradictory or otherwise unclear config combinations to note.
-
 - `config.git.push` is ignored if both `config.git.commit` and `config.git.tag` are `false`.
 - `--increment-to` is ignored if `config.npm.increment` is `false`.
 - `--increment-to` will override `--target`/`-t`.
