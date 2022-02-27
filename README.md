@@ -189,7 +189,7 @@ There are some contradictory or otherwise unclear config combinations to note.
 - `config.git.push` is ignored if both `config.git.commit` and `config.git.tag` are `false`.
 - `--increment-to` is ignored if `config.npm.increment` is `false`.
 - `--increment-to` will override `--target`/`-t`.
-- `--increment-to`, if a valid semver version, will automatically be parsed for an npm tag during the publish step. You can optionally provide `--npm-tag` to override this.
+- `--increment-to`, if a valisemver version, will automatically be parsed for an npm tag during the publish step. You can optionally provide `--npm-tag` to override this.
 
 ## Roadmap
 
