@@ -6,6 +6,28 @@ import { exitWithError, pkgReporter } from "./helpers/reporter.js"
 import { ROOT_PACKAGE_FILE } from "./helpers/constants.js"
 import { cmd } from "./helpers/cmd.js"
 
+function getSemverRangePart(version) {
+  let rangePart = ""
+  const parts = version.split("")
+  const length = parts.length
+
+  for (let i = 0; i < length; i++) {
+    const part = parts[i]
+    const partIsNumber = !isNaN(parseInt(part, 10))
+    const versionRangeEnd = i !== 0
+
+    if (partIsNumber) {
+      if (versionRangeEnd) {
+        rangePart = version.slice(0, i)
+      }
+
+      break
+    }
+  }
+
+  return rangePart
+}
+
 function setDependencies(config, entry) {
   const { getPackage, dir } = entry
   const pkgContent = getPackage()
@@ -33,7 +55,8 @@ function setDependencies(config, entry) {
           config.packageNames.some((pkgName) => pkgName === name)
         )
         .forEach((name) => {
-          pkgContent[type][name] = `^${config.releaseVersion}`
+          const rangePart = getSemverRangePart(pkgContent[type][name])
+          pkgContent[type][name] = `${rangePart}${config.releaseVersion}`
         })
     })
 

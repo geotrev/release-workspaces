@@ -198,4 +198,3 @@ There are some contradictory or otherwise unclear config combinations to note.
 
 - [ ] Automate GitHub/GitLab releases
 - [ ] Rollback changes if failures occur mid-release
-- [ ] Respect non-caret ranges
