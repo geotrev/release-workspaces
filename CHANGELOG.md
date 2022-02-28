@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/geotrev/release-workspaces/compare/v0.2.0...v0.2.1) (2022-02-28)
+
+
+### Features
+
+* retains version range when incrementing codependency versions ([073d218](https://github.com/geotrev/release-workspaces/commit/073d21879683a07211084b5b1ccf62f0890e42a5))
+
 ## [0.2.0](https://github.com/geotrev/release-workspaces/compare/v0.1.7...v0.2.0) (2022-02-27)
 
 ## [0.1.7](https://github.com/geotrev/release-workspaces/compare/v0.1.6...v0.1.7) (2022-02-27)
