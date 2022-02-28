@@ -196,5 +196,6 @@ There are some contradictory or otherwise unclear config combinations to note.
 
 ## Roadmap
 
-- [ ] Automate GitHub/GitLab releases
+- [ ] Release in CI
 - [ ] Rollback changes if failures occur mid-release
+- [ ] Automate GitHub/GitLab releases
