@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+import { ReportSteps } from "./helpers/constants.js"
+import { getCommitCmd, getTagCmd, getPushCmd } from "./helpers/git-commands.js"
+import { setVersionToString } from "./helpers/transformers.js"
 import { reportCmd } from "./helpers/cmd.js"
 
 export async function runCommit(config) {
@@ -12,59 +15,54 @@ export async function runCommit(config) {
   } = config.git
   const { precommit, postcommit, pretag, posttag, prepush, postpush } =
     config.hooks
-  const VERSION_INSERT = "${version}"
 
   if (shouldCommit) {
-    const commitMsg =
-      commitMessage.indexOf(VERSION_INSERT) > -1
-        ? commitMessage.replace(VERSION_INSERT, config.releaseVersion)
-        : commitMessage
-    const commitCmd = `git commit -m '${commitMsg}'`
+    const commitMsg = setVersionToString(commitMessage, config.releaseVersion)
 
     if (precommit) {
-      await reportCmd(precommit, { ...config, step: "Precommit" })
+      await reportCmd(precommit, { ...config, step: ReportSteps.PRECOMMIT })
     }
 
-    await reportCmd(commitCmd, { ...config, step: "Commit" })
+    await reportCmd(getCommitCmd(commitMsg), {
+      ...config,
+      step: ReportSteps.COMMIT,
+    })
 
     if (postcommit) {
-      await reportCmd(postcommit, { ...config, step: "Postcommit" })
+      await reportCmd(postcommit, { ...config, step: ReportSteps.POSTCOMMIT })
     }
   }
 
   // Create the tag
 
   if (shouldTag) {
-    const tagMsg =
-      tagMessage.indexOf(VERSION_INSERT) > -1
-        ? tagMessage.replace(VERSION_INSERT, config.releaseVersion)
-        : tagMessage
-    const tagCmd = `git tag -a -m '${tagMsg}' v${config.releaseVersion}`
+    const tagMsg = setVersionToString(tagMessage, config.releaseVersion)
 
     if (pretag) {
-      await reportCmd(pretag, { ...config, step: "Pretag" })
+      await reportCmd(pretag, { ...config, step: ReportSteps.PRETAG })
     }
 
-    await reportCmd(tagCmd, { ...config, step: "Tag" })
+    await reportCmd(getTagCmd(tagMsg, config.releaseVersion), {
+      ...config,
+      step: ReportSteps.TAG,
+    })
 
     if (posttag) {
-      await reportCmd(posttag, { ...config, step: "Posttag" })
+      await reportCmd(posttag, { ...config, step: ReportSteps.POSTTAG })
     }
   }
 
   // If committing or tagging, push it up
 
   if (shouldPush && (shouldTag || shouldCommit)) {
-    const pushCmd = "git push --follow-tags"
-
     if (prepush) {
-      await reportCmd(prepush, { ...config, step: "Prepush" })
+      await reportCmd(prepush, { ...config, step: ReportSteps.PREPUSH })
     }
 
-    await reportCmd(pushCmd, { ...config, step: "Push" })
+    await reportCmd(getPushCmd(), { ...config, step: ReportSteps.PUSH })
 
     if (postpush) {
-      await reportCmd(postpush, { ...config, step: "Postpush" })
+      await reportCmd(postpush, { ...config, step: ReportSteps.POSTPUSH })
     }
   }
 }
