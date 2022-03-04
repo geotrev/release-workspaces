@@ -17,7 +17,7 @@ const config = {
   },
 }
 
-describe("initialize", () => {
+describe("initialize()", () => {
   it("normalizes config", async () => {
     // When
     await initialize(config)
