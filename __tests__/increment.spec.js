@@ -1,9 +1,9 @@
 import "./mocks.js"
 import fs from "fs"
+import path from "path"
 import { runIncrement } from "../bin/increment.js"
 import { pkgReporter, exitWithError } from "../bin/helpers/reporter.js"
 import { cmd } from "../bin/helpers/cmd.js"
-import path from "path"
 
 jest.mock("../bin/helpers/cmd.js", () => ({
   cmd: jest.fn(),
