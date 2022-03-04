@@ -1,13 +1,10 @@
 import "./mocks.js"
 import fs from "fs"
 import { runIncrement } from "../bin/increment.js"
-import { pkgReporter } from "../bin/helpers/reporter.js"
+import { pkgReporter, exitWithError } from "../bin/helpers/reporter.js"
 import { cmd } from "../bin/helpers/cmd.js"
 import path from "path"
 
-jest.mock("fs", () => ({
-  writeFileSync: jest.fn(),
-}))
 jest.mock("../bin/helpers/cmd.js", () => ({
   cmd: jest.fn(),
 }))
@@ -52,34 +49,101 @@ const config = {
 }
 
 describe("runIncrement()", () => {
-  it("versions an entry", async () => {
-    // Given
-    const command = `npm version -w ${entryOne.name} ${config.releaseVersion} --no-git-tag-version`
-    // When
-    await runIncrement(config, entryOne)
-    // Then
-    expect(cmd).toBeCalledWith(
-      command,
-      expect.objectContaining(config),
-      pkgReporter
-    )
+  describe("version", () => {
+    beforeEach(() => {
+      fs.writeFileSync = jest.fn()
+    })
+
+    afterEach(() => {
+      fs.writeFileSync.mockReset()
+    })
+
+    it("versions an entry", async () => {
+      // Given
+      const command = `npm version -w ${entryOne.name} ${config.releaseVersion} --no-git-tag-version`
+      // When
+      await runIncrement(config, entryOne)
+      // Then
+      expect(cmd).toBeCalledWith(
+        command,
+        expect.objectContaining(config),
+        pkgReporter
+      )
+    })
+
+    it("sets new package content", async () => {
+      // Given
+      const pkg = entryOne.getPackage()
+      const newPkgContent = JSON.stringify(
+        { ...pkg, dependencies: { "@test/two": "~0.0.1" } },
+        null,
+        2
+      )
+      // When
+      await runIncrement(config, entryOne)
+      // Then
+      expect(fs.writeFileSync).toBeCalledWith(
+        `${entryOne.dir}/package.json`,
+        newPkgContent,
+        "utf8"
+      )
+    })
+
+    it("prints write command if dry run and verbose", async () => {
+      // Given
+      const dryConfig = { ...config, verbose: true, dryRun: true }
+      // When
+      await runIncrement(dryConfig, entryOne)
+      // Then
+      expect(pkgReporter.info).toBeCalledWith(
+        `fs.writeFileSync(path.resolve(dir, "package.json"), newPkgJson, "utf8")`
+      )
+    })
+
+    it("prints write command if verbose", async () => {
+      // Given
+      const verbConfig = { ...config, verbose: true }
+      // When
+      await runIncrement(verbConfig, entryOne)
+      // Then
+      expect(pkgReporter.info).toBeCalledWith(
+        `fs.writeFileSync(path.resolve(dir, "package.json"), newPkgJson, "utf8")`
+      )
+    })
+
+    it("does not write to package.json if dry run", async () => {
+      // Given
+      const dryConfig = { ...config, dryRun: true }
+      // When
+      await runIncrement(dryConfig, entryOne)
+      // Then
+      expect(fs.writeFileSync).not.toBeCalled()
+    })
+
+    it("does not write to file if there are no matching dependencies", async () => {
+      // When
+      await runIncrement(config, entryTwo)
+      // Then
+      expect(fs.writeFileSync).not.toBeCalled()
+    })
   })
 
-  it("sets new package content", async () => {
-    // Given
-    const pkg = entryOne.getPackage()
-    const newPkgContent = JSON.stringify(
-      { ...pkg, dependencies: { "@test/two": "~0.0.1" } },
-      null,
-      2
-    )
-    // When
-    await runIncrement(config, entryOne)
-    // Then
-    expect(fs.writeFileSync).toBeCalledWith(
-      `${entryOne.dir}/package.json`,
-      newPkgContent,
-      "utf8"
-    )
+  describe("errors", () => {
+    beforeEach(() => {
+      fs.writeFileSync = jest.fn(() => {
+        throw new Error()
+      })
+    })
+
+    afterEach(() => {
+      fs.writeFileSync.mockReset()
+    })
+
+    it("exits if write to file fails", async () => {
+      // When
+      await runIncrement(config, entryOne)
+      // Then
+      expect(exitWithError).toBeCalled()
+    })
   })
 })
