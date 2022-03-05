@@ -4,6 +4,7 @@ import { getAddCommand } from "../bin/helpers/git-commands.js"
 import { runPublish } from "../bin/publish.js"
 import { cmd } from "../bin/helpers/cmd.js"
 import { pkgReporter } from "../bin/helpers/reporter.js"
+import { getPublishCommand } from "../bin/helpers/npm-commands.js"
 
 jest.mock("../bin/helpers/cmd.js", () => ({
   cmd: jest.fn(),
@@ -57,7 +58,7 @@ describe("runPublish()", () => {
     await runPublish(baseConfig, entry)
     // Then
     expect(cmd).toBeCalledWith(
-      `npm publish -w ${entry.name} --tag latest`,
+      getPublishCommand(entry.name, "latest"),
       baseConfig,
       pkgReporter
     )
@@ -80,7 +81,7 @@ describe("runPublish()", () => {
     await runPublish(config, entry)
     // Then
     expect(cmd).toBeCalledWith(
-      `npm publish -w ${entry.name} --tag next`,
+      getPublishCommand(entry.name, "next"),
       config,
       pkgReporter
     )
@@ -96,7 +97,7 @@ describe("runPublish()", () => {
     await runPublish(config, entry)
     // Then
     expect(cmd).toBeCalledWith(
-      `npm publish -w ${entry.name} --tag alpha`,
+      getPublishCommand(entry.name, "alpha"),
       config,
       pkgReporter
     )
@@ -112,7 +113,7 @@ describe("runPublish()", () => {
     await runPublish(config, entry)
     // Then
     expect(cmd).toBeCalledWith(
-      `npm publish -w ${entry.name} --tag beta`,
+      getPublishCommand(entry.name, "beta"),
       config,
       pkgReporter
     )

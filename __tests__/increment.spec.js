@@ -4,6 +4,7 @@ import path from "path"
 import { runIncrement } from "../bin/increment.js"
 import { pkgReporter, exitWithError } from "../bin/helpers/reporter.js"
 import { cmd } from "../bin/helpers/cmd.js"
+import { getVersionCommand } from "../bin/helpers/npm-commands.js"
 
 jest.mock("../bin/helpers/cmd.js", () => ({
   cmd: jest.fn(),
@@ -55,12 +56,12 @@ describe("runIncrement()", () => {
     })
 
     afterEach(() => {
-      fs.writeFileSync.mockReset()
+      fs.writeFileSync.mockRestore()
     })
 
     it("versions an entry", async () => {
       // Given
-      const command = `npm version -w ${entryOne.name} ${config.releaseVersion} --no-git-tag-version`
+      const command = getVersionCommand(entryOne.name, config.releaseVersion)
       // When
       await runIncrement(config, entryOne)
       // Then
@@ -136,7 +137,7 @@ describe("runIncrement()", () => {
     })
 
     afterEach(() => {
-      fs.writeFileSync.mockReset()
+      fs.writeFileSync.mockRestore()
     })
 
     it("exits if write to file fails", async () => {

@@ -5,6 +5,7 @@ import path from "path"
 import { exitWithError, pkgReporter } from "./helpers/reporter.js"
 import { ROOT_PACKAGE_FILE } from "./helpers/constants.js"
 import { cmd } from "./helpers/cmd.js"
+import { getVersionCommand } from "./helpers/npm-commands.js"
 
 function getSemverRangePart(version) {
   let rangePart = ""
@@ -88,9 +89,11 @@ function setDependencies(config, entry) {
 export async function runIncrement(config, entry) {
   pkgReporter.start("Version")
 
-  const incCommand = `npm version -w ${entry.name} ${config.releaseVersion} --no-git-tag-version`
-
-  await cmd(incCommand, config, pkgReporter)
+  await cmd(
+    getVersionCommand(entry.name, config.releaseVersion),
+    config,
+    pkgReporter
+  )
 
   setDependencies(config, entry)
 
