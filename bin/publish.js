@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import semver from "semver"
+import { getAddCommand } from "./helpers/git-commands.js"
 import { cmd } from "./helpers/cmd.js"
 import { pkgReporter } from "./helpers/reporter.js"
 
@@ -20,10 +21,9 @@ export async function runPublish(config, entry) {
     "latest"
 
   if (!isPrivate) {
-    const addChangesCommand = "git add . -u"
     const pubCommand = `npm publish -w ${entry.name} --tag ${tag}`
 
-    await cmd(addChangesCommand, config, pkgReporter)
+    await cmd(getAddCommand(), config, pkgReporter)
     await cmd(pubCommand, config, pkgReporter)
 
     pkgReporter.succeed("Publish successful")

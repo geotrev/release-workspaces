@@ -9,3 +9,7 @@ export function getTagCmd(msg, version) {
 export function getPushCmd() {
   return "git push --follow-tags"
 }
+
+export function getAddCommand() {
+  return "git add . -u"
+}
