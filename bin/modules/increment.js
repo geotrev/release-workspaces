@@ -2,10 +2,10 @@
 
 import fs from "fs"
 import path from "path"
-import { exitWithError, pkgReporter } from "./helpers/reporter.js"
-import { ROOT_PACKAGE_FILE } from "./helpers/constants.js"
-import { cmd } from "./helpers/cmd.js"
-import { getVersionCommand } from "./helpers/npm-commands.js"
+import { exitWithError, pkgReporter } from "../helpers/reporter.js"
+import { ROOT_PACKAGE_FILE } from "../helpers/constants.js"
+import { cmd } from "../helpers/cmd.js"
+import { getVersionCommand } from "../helpers/npm-commands.js"
 
 function getSemverRangePart(version) {
   let rangePart = ""

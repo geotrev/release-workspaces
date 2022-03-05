@@ -3,9 +3,9 @@
   "version": "0.2.1",
   "description": "Automated versioning and publishing of projects using npm workspaces",
   "type": "module",
-  "main": "bin/release.js",
+  "main": "bin/cli.js",
   "bin": {
-    "release-workspaces": "bin/release.js"
+    "release-workspaces": "bin/cli.js"
   },
   "scripts": {
     "prepare": "husky install",

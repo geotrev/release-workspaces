@@ -1,7 +1,7 @@
 import "./mocks.js"
-import { initialize } from "../bin/initialize"
 import { normalizeConfig } from "../bin/helpers/normalize-config.js"
 import { checkUnstaged, checkRefStatus } from "../bin/helpers/git-helpers.js"
+import { initialize } from "../bin/modules/initialize"
 
 jest.mock("../bin/helpers/normalize-config.js", () => ({
   normalizeConfig: jest.fn(),

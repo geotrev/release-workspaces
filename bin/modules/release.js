@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { getArgs } from "./helpers/get-args.js"
-import { reportCmd } from "./helpers/cmd.js"
-import { setRootVersion } from "./helpers/set-root-version.js"
+import { getArgs } from "../helpers/get-args.js"
+import { reportCmd } from "../helpers/cmd.js"
+import { setRootVersion } from "../helpers/set-root-version.js"
 
 import { runNpm } from "./npm.js"
 import { runCommit } from "./commit.js"
@@ -35,5 +35,3 @@ export async function release() {
 
   if (commit || tag) await runCommit(config)
 }
-
-release()

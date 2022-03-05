@@ -1,14 +1,14 @@
 import "./mocks.js"
 import path from "path"
-import { runNpm } from "../bin/npm.js"
-import { runIncrement } from "../bin/increment.js"
-import { runPublish } from "../bin/publish.js"
+import { runNpm } from "../bin/modules/npm.js"
+import { runIncrement } from "../bin/modules/increment.js"
+import { runPublish } from "../bin/modules/publish.js"
 
-jest.mock("../bin/increment.js", () => ({
+jest.mock("../bin/modules/increment.js", () => ({
   runIncrement: jest.fn(),
 }))
 
-jest.mock("../bin/publish.js", () => ({
+jest.mock("../bin/modules/publish.js", () => ({
   runPublish: jest.fn(),
 }))
 

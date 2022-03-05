@@ -8,3 +8,7 @@ jest.mock("ora", () => () => ({
 jest.mock("fs")
 jest.mock("child_process")
 jest.mock("util")
+jest.mock("yargs")
+jest.mock("find-up", () => ({
+  findUpSync: jest.fn(),
+}))

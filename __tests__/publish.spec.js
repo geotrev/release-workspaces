@@ -1,10 +1,10 @@
 import "./mocks.js"
 import path from "path"
 import { getAddCommand } from "../bin/helpers/git-commands.js"
-import { runPublish } from "../bin/publish.js"
 import { cmd } from "../bin/helpers/cmd.js"
 import { pkgReporter } from "../bin/helpers/reporter.js"
 import { getPublishCommand } from "../bin/helpers/npm-commands.js"
+import { runPublish } from "../bin/modules/publish.js"
 
 jest.mock("../bin/helpers/cmd.js", () => ({
   cmd: jest.fn(),

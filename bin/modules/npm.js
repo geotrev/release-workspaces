@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { reporter } from "./helpers/reporter.js"
+import { reporter } from "../helpers/reporter.js"
 import { runIncrement } from "./increment.js"
 import { runPublish } from "./publish.js"
 

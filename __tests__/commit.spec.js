@@ -6,8 +6,8 @@ import {
   getPushCmd,
 } from "../bin/helpers/git-commands.js"
 import { setVersionToString } from "../bin/helpers/transformers.js"
-import { runCommit } from "../bin/commit.js"
 import { reportCmd } from "../bin/helpers/cmd.js"
+import { runCommit } from "../bin/modules/commit.js"
 
 jest.mock("../bin/helpers/cmd.js", () => ({
   reportCmd: jest.fn(),

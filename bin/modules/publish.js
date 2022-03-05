@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import semver from "semver"
-import { getAddCommand } from "./helpers/git-commands.js"
-import { cmd } from "./helpers/cmd.js"
-import { pkgReporter } from "./helpers/reporter.js"
-import { getPublishCommand } from "./helpers/npm-commands.js"
+import { getAddCommand } from "../helpers/git-commands.js"
+import { cmd } from "../helpers/cmd.js"
+import { pkgReporter } from "../helpers/reporter.js"
+import { getPublishCommand } from "../helpers/npm-commands.js"
 
 function parsePreId(version) {
   const parts = semver.prerelease(version) || []
