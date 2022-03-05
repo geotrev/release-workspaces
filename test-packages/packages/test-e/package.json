@@ -1,9 +1,9 @@
 {
   "name": "@release-workspaces-test/e",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "private": true,
   "dependencies": {
-    "@release-workspaces-test/a": "^0.6.4",
-    "@release-workspaces-test/b": "^0.6.4"
+    "@release-workspaces-test/a": "^0.6.5",
+    "@release-workspaces-test/b": "^0.6.5"
   }
 }
