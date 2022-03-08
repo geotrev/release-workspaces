@@ -8,10 +8,10 @@ import {
   ROOT_PACKAGE_FILE,
 } from "./constants.js"
 import { cmd } from "./cmd.js"
-import { reporter, exitWithError } from "./reporter.js"
+import { report, exitWithError } from "./reporter.js"
 
 export async function setRootVersion(config) {
-  reporter.start("Update root version")
+  report({ m: "Update root version", type: "start" })
 
   let updatePkg = false,
     updateConfig = false
@@ -48,7 +48,7 @@ export async function setRootVersion(config) {
 
     if (config.dryRun) {
       if (config.verbose) {
-        reporter.info(configCmd)
+        report({ m: configCmd, type: "info" })
       }
     } else {
       try {
@@ -72,7 +72,7 @@ export async function setRootVersion(config) {
 
     if (config.dryRun) {
       if (config.verbose) {
-        reporter.info(packageCmd)
+        report({ m: packageCmd, type: "info" })
       }
     } else {
       try {
@@ -93,5 +93,5 @@ export async function setRootVersion(config) {
   const addChangesCommand = "git add . -u"
   await cmd(addChangesCommand, config)
 
-  reporter.succeed()
+  report({ type: "succeed" })
 }

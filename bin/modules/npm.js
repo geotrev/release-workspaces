@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { reporter } from "../helpers/reporter.js"
+import { report } from "../helpers/reporter.js"
 import { runIncrement } from "./increment.js"
 import { runPublish } from "./publish.js"
 
@@ -12,9 +12,12 @@ export async function runNpm(config) {
     const entry = packages[i]
     const { name } = entry
 
-    reporter.stopAndPersist({
-      text: `${name}@${config.releaseVersion}`,
-      symbol: "📦",
+    report({
+      m: {
+        text: `${name}@${config.releaseVersion}`,
+        symbol: "📦",
+      },
+      type: "stopAndPersist",
     })
 
     if (config.npm.increment) {
@@ -26,5 +29,8 @@ export async function runNpm(config) {
     }
   }
 
-  reporter.succeed("All packages versioned/published without errors")
+  report({
+    m: "All packages versioned/published without errors",
+    type: "succeed",
+  })
 }

@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
 import semver from "semver"
-import { getAddCommand } from "../helpers/git-commands.js"
+import { getAddCommand, getPublishCommand } from "../helpers/commands.js"
 import { cmd } from "../helpers/cmd.js"
-import { pkgReporter } from "../helpers/reporter.js"
-import { getPublishCommand } from "../helpers/npm-commands.js"
+import { report } from "../helpers/reporter.js"
 
 function parsePreId(version) {
   const parts = semver.prerelease(version) || []
@@ -12,7 +11,7 @@ function parsePreId(version) {
 }
 
 export async function runPublish(config, entry) {
-  pkgReporter.start("Publish")
+  report({ m: "Publish", type: "start", indent: true })
 
   const isPrivate = entry.getPackage().private
   const tag =
@@ -21,12 +20,12 @@ export async function runPublish(config, entry) {
     parsePreId(config.releaseVersion) ||
     "latest"
 
-  if (!isPrivate) {
-    await cmd(getAddCommand(), config, pkgReporter)
-    await cmd(getPublishCommand(entry.name, tag), config, pkgReporter)
-
-    pkgReporter.succeed("Publish successful")
+  if (isPrivate) {
+    report({ m: "Publish skipped (private)", type: "succeed", indent: true })
   } else {
-    pkgReporter.succeed("Publish skipped (private)")
+    await cmd(getAddCommand(), config, true)
+    await cmd(getPublishCommand(entry.name, tag), config, true)
+
+    report({ m: "Publish successful", type: "succeed", indent: true })
   }
 }

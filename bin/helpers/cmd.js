@@ -1,15 +1,17 @@
 import { exec } from "./exec-promise.js"
-import { reporter as defaultReporter, exitWithError } from "./reporter.js"
+import { report, exitWithError } from "./reporter.js"
 
-export async function cmd(command, config, reporter = defaultReporter) {
+export async function cmd(command, config, indent = false) {
+  const info = { m: command, type: "info", indent }
+
   if (config.dryRun) {
     if (config.verbose) {
-      reporter.info(command)
+      report(info)
     }
   } else {
     try {
       if (config.verbose) {
-        reporter.info(command)
+        report(info)
       }
 
       await exec(command)
@@ -19,10 +21,10 @@ export async function cmd(command, config, reporter = defaultReporter) {
   }
 }
 
-export async function reportCmd(command, config, reporter = defaultReporter) {
-  reporter.start(config.step)
+export async function reportCmd(command, config, indent = false) {
+  report({ m: config.step, type: "start", indent })
 
-  await cmd(command, config, reporter)
+  await cmd(command, config, indent)
 
-  reporter.succeed(`${config.step} successful`)
+  report({ m: `${config.step} successful`, type: "succeed", indent })
 }

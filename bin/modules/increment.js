@@ -2,10 +2,10 @@
 
 import fs from "fs"
 import path from "path"
-import { exitWithError, pkgReporter } from "../helpers/reporter.js"
-import { ROOT_PACKAGE_FILE } from "../helpers/constants.js"
+import { getVersionCommand } from "../helpers/commands.js"
+import { exitWithError, report } from "../helpers/reporter.js"
 import { cmd } from "../helpers/cmd.js"
-import { getVersionCommand } from "../helpers/npm-commands.js"
+import { ROOT_PACKAGE_FILE } from "../helpers/constants.js"
 
 function getSemverRangePart(version) {
   let rangePart = ""
@@ -66,12 +66,12 @@ function setDependencies(config, entry) {
 
     if (config.dryRun) {
       if (config.verbose) {
-        pkgReporter.info(writeCommand)
+        report({ m: writeCommand, type: "info", indent: true })
       }
     } else {
       try {
         if (config.verbose) {
-          pkgReporter.info(writeCommand)
+          report({ m: writeCommand, type: "info", indent: true })
         }
 
         fs.writeFileSync(
@@ -87,15 +87,11 @@ function setDependencies(config, entry) {
 }
 
 export async function runIncrement(config, entry) {
-  pkgReporter.start("Version")
+  report({ m: "Version", type: "start", indent: true })
 
-  await cmd(
-    getVersionCommand(entry.name, config.releaseVersion),
-    config,
-    pkgReporter
-  )
+  await cmd(getVersionCommand(entry.name, config.releaseVersion), config, true)
 
   setDependencies(config, entry)
 
-  pkgReporter.succeed("Version successful")
+  report({ m: "Version successful", type: "succeed", indent: true })
 }

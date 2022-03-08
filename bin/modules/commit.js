@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { ReportSteps } from "../helpers/constants.js"
-import { getCommitCmd, getTagCmd, getPushCmd } from "../helpers/git-commands.js"
+import { getCommitCmd, getTagCmd, getPushCmd } from "../helpers/commands.js"
 import { setVersionToString } from "../helpers/transformers.js"
 import { reportCmd } from "../helpers/cmd.js"
 
