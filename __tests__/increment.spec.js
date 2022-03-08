@@ -1,9 +1,9 @@
 import "./mocks.js"
 import fs from "fs"
 import path from "path"
-import { pkgReporter, exitWithError } from "../bin/helpers/reporter.js"
+import { report, exitWithError } from "../bin/helpers/reporter.js"
 import { cmd } from "../bin/helpers/cmd.js"
-import { getVersionCommand } from "../bin/helpers/npm-commands.js"
+import { getVersionCommand } from "../bin/helpers/commands.js"
 import { runIncrement } from "../bin/modules/increment.js"
 
 jest.mock("../bin/helpers/cmd.js", () => ({
@@ -11,11 +11,7 @@ jest.mock("../bin/helpers/cmd.js", () => ({
 }))
 jest.mock("../bin/helpers/reporter.js", () => ({
   exitWithError: jest.fn(),
-  pkgReporter: {
-    info: jest.fn(),
-    start: jest.fn(),
-    succeed: jest.fn(),
-  },
+  report: jest.fn(),
 }))
 
 const packageNames = ["@test/one", "@test/two"]
@@ -65,11 +61,7 @@ describe("runIncrement()", () => {
       // When
       await runIncrement(config, entryOne)
       // Then
-      expect(cmd).toBeCalledWith(
-        command,
-        expect.objectContaining(config),
-        pkgReporter
-      )
+      expect(cmd).toBeCalledWith(command, expect.objectContaining(config), true)
     })
 
     it("sets new package content", async () => {
@@ -96,9 +88,7 @@ describe("runIncrement()", () => {
       // When
       await runIncrement(dryConfig, entryOne)
       // Then
-      expect(pkgReporter.info).toBeCalledWith(
-        `fs.writeFileSync(path.resolve(dir, "package.json"), newPkgJson, "utf8")`
-      )
+      expect(report).toBeCalled()
     })
 
     it("prints write command if verbose", async () => {
@@ -107,9 +97,7 @@ describe("runIncrement()", () => {
       // When
       await runIncrement(verbConfig, entryOne)
       // Then
-      expect(pkgReporter.info).toBeCalledWith(
-        `fs.writeFileSync(path.resolve(dir, "package.json"), newPkgJson, "utf8")`
-      )
+      expect(report).toBeCalled()
     })
 
     it("does not write to package.json if dry run", async () => {

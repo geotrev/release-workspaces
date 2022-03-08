@@ -1,20 +1,11 @@
 import "./mocks.js"
 import path from "path"
-import { getAddCommand } from "../bin/helpers/git-commands.js"
+import { getAddCommand, getPublishCommand } from "../bin/helpers/commands.js"
 import { cmd } from "../bin/helpers/cmd.js"
-import { pkgReporter } from "../bin/helpers/reporter.js"
-import { getPublishCommand } from "../bin/helpers/npm-commands.js"
 import { runPublish } from "../bin/modules/publish.js"
 
 jest.mock("../bin/helpers/cmd.js", () => ({
   cmd: jest.fn(),
-}))
-
-jest.mock("../bin/helpers/reporter.js", () => ({
-  pkgReporter: {
-    start: jest.fn(),
-    succeed: jest.fn(),
-  },
 }))
 
 const entry = {
@@ -50,7 +41,7 @@ describe("runPublish()", () => {
     // When
     await runPublish(baseConfig, entry)
     // Then
-    expect(cmd).toBeCalledWith(getAddCommand(), baseConfig, pkgReporter)
+    expect(cmd).toBeCalledWith(getAddCommand(), baseConfig, true)
   })
 
   it("publishes package", async () => {
@@ -60,7 +51,7 @@ describe("runPublish()", () => {
     expect(cmd).toBeCalledWith(
       getPublishCommand(entry.name, "latest"),
       baseConfig,
-      pkgReporter
+      true
     )
   })
 
@@ -83,7 +74,7 @@ describe("runPublish()", () => {
     expect(cmd).toBeCalledWith(
       getPublishCommand(entry.name, "next"),
       config,
-      pkgReporter
+      true
     )
   })
 
@@ -99,7 +90,7 @@ describe("runPublish()", () => {
     expect(cmd).toBeCalledWith(
       getPublishCommand(entry.name, "alpha"),
       config,
-      pkgReporter
+      true
     )
   })
 
@@ -115,7 +106,7 @@ describe("runPublish()", () => {
     expect(cmd).toBeCalledWith(
       getPublishCommand(entry.name, "beta"),
       config,
-      pkgReporter
+      true
     )
   })
 })

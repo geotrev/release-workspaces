@@ -1,10 +1,6 @@
 import "./mocks.js"
 import { ReportSteps } from "../bin/helpers/constants.js"
-import {
-  getCommitCmd,
-  getTagCmd,
-  getPushCmd,
-} from "../bin/helpers/git-commands.js"
+import { getCommitCmd, getTagCmd, getPushCmd } from "../bin/helpers/commands.js"
 import { setVersionToString } from "../bin/helpers/transformers.js"
 import { reportCmd } from "../bin/helpers/cmd.js"
 import { runCommit } from "../bin/modules/commit.js"
