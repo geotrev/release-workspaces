@@ -1,13 +1,16 @@
 import "./mocks.js"
 import path from "path"
+import { report } from "../bin/helpers/reporter.js"
 import { runNpm } from "../bin/modules/npm.js"
 import { runIncrement } from "../bin/modules/increment.js"
 import { runPublish } from "../bin/modules/publish.js"
 
+jest.mock("../bin/helpers/reporter.js", () => ({
+  report: jest.fn(),
+}))
 jest.mock("../bin/modules/increment.js", () => ({
   runIncrement: jest.fn(),
 }))
-
 jest.mock("../bin/modules/publish.js", () => ({
   runPublish: jest.fn(),
 }))
@@ -71,5 +74,36 @@ describe("runNpm()", () => {
     })
     // Then
     expect(runPublish).not.toBeCalled()
+  })
+
+  describe("report", () => {
+    it("reports for each package", async () => {
+      // When
+      await runNpm(config)
+      // Then
+      for (const pkg of config.packages) {
+        expect(report).toBeCalledWith(
+          expect.objectContaining({
+            m: {
+              text: `${pkg.name}@${config.releaseVersion}`,
+              symbol: "📦",
+            },
+            type: "stopAndPersist",
+          })
+        )
+      }
+    })
+
+    it("reports success", async () => {
+      // When
+      await runNpm(config)
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "All packages versioned/published without errors",
+          type: "succeed",
+        })
+      )
+    })
   })
 })

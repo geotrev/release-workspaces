@@ -1,8 +1,12 @@
 import "./mocks.js"
 import { normalizeConfig } from "../bin/helpers/normalize-config.js"
+import { report } from "../bin/helpers/reporter.js"
 import { checkUnstaged, checkRefStatus } from "../bin/helpers/git-helpers.js"
 import { initialize } from "../bin/modules/initialize"
 
+jest.mock("../bin/helpers/reporter.js", () => ({
+  report: jest.fn(),
+}))
 jest.mock("../bin/helpers/normalize-config.js", () => ({
   normalizeConfig: jest.fn(),
 }))
@@ -45,5 +49,31 @@ describe("initialize()", () => {
     // Then
     expect(checkUnstaged).not.toBeCalled()
     expect(checkRefStatus).not.toBeCalled()
+  })
+
+  describe("reports", () => {
+    it("reports start", async () => {
+      // When
+      await initialize({ git: { skipChecks: true } })
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "Preparing to release",
+          type: "start",
+        })
+      )
+    })
+
+    it("reports success", async () => {
+      // When
+      await initialize({ git: { skipChecks: true } })
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "Ready to release!",
+          type: "succeed",
+        })
+      )
+    })
   })
 })

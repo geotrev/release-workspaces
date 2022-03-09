@@ -2,10 +2,14 @@ import "./mocks.js"
 import path from "path"
 import { getAddCommand, getPublishCommand } from "../bin/helpers/commands.js"
 import { cmd } from "../bin/helpers/cmd.js"
+import { report } from "../bin/helpers/reporter.js"
 import { runPublish } from "../bin/modules/publish.js"
 
 jest.mock("../bin/helpers/cmd.js", () => ({
   cmd: jest.fn(),
+}))
+jest.mock("../bin/helpers/reporter.js", () => ({
+  report: jest.fn(),
 }))
 
 const entry = {
@@ -108,5 +112,46 @@ describe("runPublish()", () => {
       config,
       true
     )
+  })
+
+  describe("report", () => {
+    it("reports start", async () => {
+      // When
+      await runPublish(baseConfig, entry)
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "Publish",
+          type: "start",
+          indent: true,
+        })
+      )
+    })
+
+    it("reports private publish skipped", async () => {
+      // When
+      await runPublish(baseConfig, privateEntry)
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "Publish skipped (private)",
+          type: "succeed",
+          indent: true,
+        })
+      )
+    })
+
+    it("reports publish success", async () => {
+      // When
+      await runPublish(baseConfig, entry)
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "Publish successful",
+          type: "succeed",
+          indent: true,
+        })
+      )
+    })
   })
 })

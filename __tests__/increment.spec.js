@@ -82,24 +82,6 @@ describe("runIncrement()", () => {
       )
     })
 
-    it("prints write command if dry run and verbose", async () => {
-      // Given
-      const dryConfig = { ...config, verbose: true, dryRun: true }
-      // When
-      await runIncrement(dryConfig, entryOne)
-      // Then
-      expect(report).toBeCalled()
-    })
-
-    it("prints write command if verbose", async () => {
-      // Given
-      const verbConfig = { ...config, verbose: true }
-      // When
-      await runIncrement(verbConfig, entryOne)
-      // Then
-      expect(report).toBeCalled()
-    })
-
     it("does not write to package.json if dry run", async () => {
       // Given
       const dryConfig = { ...config, dryRun: true }
@@ -133,6 +115,72 @@ describe("runIncrement()", () => {
       await runIncrement(config, entryOne)
       // Then
       expect(exitWithError).toBeCalled()
+    })
+  })
+
+  describe("reports", () => {
+    beforeEach(() => {
+      fs.writeFileSync = jest.fn()
+    })
+
+    afterEach(() => {
+      fs.writeFileSync.mockRestore()
+    })
+
+    it("reports write command if dry run and verbose", async () => {
+      // Given
+      const dryConfig = { ...config, verbose: true, dryRun: true }
+      // When
+      await runIncrement(dryConfig, entryOne)
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: `fs.writeFileSync(path.resolve(dir, "package.json"), newPkgJson, "utf8")`,
+          type: "info",
+          indent: true,
+        })
+      )
+    })
+
+    it("reports write command if verbose", async () => {
+      // Given
+      const verbConfig = { ...config, verbose: true }
+      // When
+      await runIncrement(verbConfig, entryOne)
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: `fs.writeFileSync(path.resolve(dir, "package.json"), newPkgJson, "utf8")`,
+          type: "info",
+          indent: true,
+        })
+      )
+    })
+
+    it("reports start", async () => {
+      // When
+      await runIncrement(config, entryTwo)
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "Version",
+          type: "start",
+          indent: true,
+        })
+      )
+    })
+
+    it("reports success", async () => {
+      // When
+      await runIncrement(config, entryTwo)
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "Version successful",
+          type: "succeed",
+          indent: true,
+        })
+      )
     })
   })
 })
