@@ -1,11 +1,11 @@
-import "./mocks.js"
-import { ReportSteps } from "../bin/helpers/constants.js"
-import { getCommitCmd, getTagCmd, getPushCmd } from "../bin/helpers/commands.js"
-import { setVersionToString } from "../bin/helpers/transformers.js"
-import { reportCmd } from "../bin/helpers/cmd.js"
-import { runCommit } from "../bin/modules/commit.js"
+import "../../.jest/mocks.js"
+import { ReportSteps } from "../helpers/constants.js"
+import { getCommitCmd, getTagCmd, getPushCmd } from "../helpers/commands.js"
+import { setVersionToString } from "../helpers/transformers.js"
+import { reportCmd } from "../helpers/cmd.js"
+import { runCommit } from "../modules/commit.js"
 
-jest.mock("../bin/helpers/cmd.js", () => ({
+jest.mock("../helpers/cmd.js", () => ({
   reportCmd: jest.fn(),
 }))
 

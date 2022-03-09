@@ -1,17 +1,17 @@
-import "./mocks.js"
+import "../../.jest/mocks.js"
 import path from "path"
-import { report } from "../bin/helpers/reporter.js"
-import { runNpm } from "../bin/modules/npm.js"
-import { runIncrement } from "../bin/modules/increment.js"
-import { runPublish } from "../bin/modules/publish.js"
+import { report } from "../helpers/reporter.js"
+import { runNpm } from "../modules/npm.js"
+import { runIncrement } from "../modules/increment.js"
+import { runPublish } from "../modules/publish.js"
 
-jest.mock("../bin/helpers/reporter.js", () => ({
+jest.mock("../helpers/reporter.js", () => ({
   report: jest.fn(),
 }))
-jest.mock("../bin/modules/increment.js", () => ({
+jest.mock("../modules/increment.js", () => ({
   runIncrement: jest.fn(),
 }))
-jest.mock("../bin/modules/publish.js", () => ({
+jest.mock("../modules/publish.js", () => ({
   runPublish: jest.fn(),
 }))
 

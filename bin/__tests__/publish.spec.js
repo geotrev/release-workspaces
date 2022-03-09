@@ -1,14 +1,14 @@
-import "./mocks.js"
+import "../../.jest/mocks.js"
 import path from "path"
-import { getAddCommand, getPublishCommand } from "../bin/helpers/commands.js"
-import { cmd } from "../bin/helpers/cmd.js"
-import { report } from "../bin/helpers/reporter.js"
-import { runPublish } from "../bin/modules/publish.js"
+import { getAddCommand, getPublishCommand } from "../helpers/commands.js"
+import { cmd } from "../helpers/cmd.js"
+import { report } from "../helpers/reporter.js"
+import { runPublish } from "../modules/publish.js"
 
-jest.mock("../bin/helpers/cmd.js", () => ({
+jest.mock("../helpers/cmd.js", () => ({
   cmd: jest.fn(),
 }))
-jest.mock("../bin/helpers/reporter.js", () => ({
+jest.mock("../helpers/reporter.js", () => ({
   report: jest.fn(),
 }))
 

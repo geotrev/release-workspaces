@@ -1,16 +1,16 @@
-import "./mocks.js"
-import { normalizeConfig } from "../bin/helpers/normalize-config.js"
-import { report } from "../bin/helpers/reporter.js"
-import { checkUnstaged, checkRefStatus } from "../bin/helpers/git-helpers.js"
-import { initialize } from "../bin/modules/initialize"
+import "../../.jest/mocks.js"
+import { normalizeConfig } from "../helpers/normalize-config.js"
+import { report } from "../helpers/reporter.js"
+import { checkUnstaged, checkRefStatus } from "../helpers/git-helpers.js"
+import { initialize } from "../modules/initialize"
 
-jest.mock("../bin/helpers/reporter.js", () => ({
+jest.mock("../helpers/reporter.js", () => ({
   report: jest.fn(),
 }))
-jest.mock("../bin/helpers/normalize-config.js", () => ({
+jest.mock("../helpers/normalize-config.js", () => ({
   normalizeConfig: jest.fn(),
 }))
-jest.mock("../bin/helpers/git-helpers.js", () => ({
+jest.mock("../helpers/git-helpers.js", () => ({
   checkRefStatus: jest.fn(),
   checkUnstaged: jest.fn(),
 }))

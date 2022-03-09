@@ -1,15 +1,15 @@
-import "./mocks.js"
+import "../../.jest/mocks.js"
 import fs from "fs"
 import path from "path"
-import { report, exitWithError } from "../bin/helpers/reporter.js"
-import { cmd } from "../bin/helpers/cmd.js"
-import { getVersionCommand } from "../bin/helpers/commands.js"
-import { runIncrement } from "../bin/modules/increment.js"
+import { report, exitWithError } from "../helpers/reporter.js"
+import { cmd } from "../helpers/cmd.js"
+import { getVersionCommand } from "../helpers/commands.js"
+import { runIncrement } from "../modules/increment.js"
 
-jest.mock("../bin/helpers/cmd.js", () => ({
+jest.mock("../helpers/cmd.js", () => ({
   cmd: jest.fn(),
 }))
-jest.mock("../bin/helpers/reporter.js", () => ({
+jest.mock("../helpers/reporter.js", () => ({
   exitWithError: jest.fn(),
   report: jest.fn(),
 }))
