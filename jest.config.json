@@ -3,7 +3,7 @@
   "clearMocks": true,
   "restoreMocks": true,
   "verbose": true,
-  "testMatch": ["<rootDir>/bin/__tests__/**/*.spec.js"],
+  "testMatch": ["<rootDir>/bin/**/__tests__/**/*.spec.js"],
   "testURL": "http://localhost/",
   "transform": {
     "\\.js$": "babel-jest"
