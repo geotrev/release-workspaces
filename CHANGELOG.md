@@ -1,3 +1,5 @@
+## [0.2.2](https://github.com/geotrev/release-workspaces/compare/v0.2.1...v0.2.2) (2022-03-09)
+
 ## [0.2.1](https://github.com/geotrev/release-workspaces/compare/v0.2.0...v0.2.1) (2022-02-28)
 
 
