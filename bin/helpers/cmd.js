@@ -2,7 +2,7 @@ import { exec } from "./exec-promise.js"
 import { report, exitWithError } from "./reporter.js"
 
 export async function cmd(command, config, indent = false) {
-  const info = { m: command, type: "info", indent }
+  const info = { m: command, indent }
 
   if (config.dryRun) {
     if (config.verbose) {

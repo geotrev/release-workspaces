@@ -23,6 +23,10 @@ export const RELEASE_INCREMENTS = [
 ]
 
 export const ReportSteps = {
+  PREINCREMENT: "Preincrement",
+  POSTINCREMENT: "Postincrement",
+  PREPUBLISH: "Prepublish",
+  POSTPUBLISH: "Postpublish",
   PRECOMMIT: "Precommit",
   COMMIT: "Commit",
   POSTCOMMIT: "Postcommit",

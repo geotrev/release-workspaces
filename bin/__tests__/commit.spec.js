@@ -2,11 +2,17 @@ import "../../.jest/mocks.js"
 import { ReportSteps } from "../helpers/constants.js"
 import { getCommitCmd, getTagCmd, getPushCmd } from "../helpers/commands.js"
 import { setVersionToString } from "../helpers/transformers.js"
+import { setRollback } from "../helpers/rollback.js"
 import { reportCmd } from "../helpers/cmd.js"
 import { runCommit } from "../modules/commit.js"
 
 jest.mock("../helpers/cmd.js", () => ({
   reportCmd: jest.fn(),
+  cmd: jest.fn(),
+}))
+
+jest.mock("../helpers/rollback.js", () => ({
+  setRollback: jest.fn(),
 }))
 
 const baseConfig = {
@@ -81,6 +87,16 @@ describe("runCommit()", () => {
         })
       )
     })
+
+    it("calls setRollback", async () => {
+      expect(setRollback).toBeCalledWith(
+        expect.objectContaining(config),
+        expect.objectContaining({
+          type: "commit",
+          callback: expect.any(Function),
+        })
+      )
+    })
   })
 
   describe("tag is true", () => {
@@ -125,6 +141,16 @@ describe("runCommit()", () => {
         expect.objectContaining({
           ...config,
           step: ReportSteps.POSTTAG,
+        })
+      )
+    })
+
+    it("calls setRollback", async () => {
+      expect(setRollback).toBeCalledWith(
+        expect.objectContaining(config),
+        expect.objectContaining({
+          type: "tag",
+          callback: expect.any(Function),
         })
       )
     })

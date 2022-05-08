@@ -3,8 +3,10 @@ export const configDefault = {
     version: "",
   },
   hooks: {
-    prenpm: "",
-    postnpm: "",
+    preincrement: "",
+    postincrement: "",
+    prepublish: "",
+    postpublish: "",
     precommit: "",
     postcommit: "",
     pretag: "",

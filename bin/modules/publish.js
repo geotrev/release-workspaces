@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 import semver from "semver"
-import { getAddCommand, getPublishCommand } from "../helpers/commands.js"
+import { getPublishCommand } from "../helpers/commands.js"
 import { cmd } from "../helpers/cmd.js"
 import { report } from "../helpers/reporter.js"
+import { setRollback } from "../helpers/rollback.js"
 
 function parsePreId(version) {
   const parts = semver.prerelease(version) || []
@@ -23,8 +24,16 @@ export async function runPublish(config, entry) {
   if (isPrivate) {
     report({ m: "Publish skipped (private)", type: "succeed", indent: true })
   } else {
-    await cmd(getAddCommand(), config, true)
     await cmd(getPublishCommand(entry.name, tag), config, true)
+
+    setRollback(config, {
+      type: "publish",
+      callback: async () => {
+        await report({
+          m: `${entry.name}@${config.releaseVersion}: This package is already published. Delete this tag on npm OR use a new version in your next release.`,
+        })
+      },
+    })
 
     report({ m: "Publish successful", type: "succeed", indent: true })
   }

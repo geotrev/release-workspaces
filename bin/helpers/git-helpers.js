@@ -55,7 +55,7 @@ export async function checkRefStatus(config) {
   } else {
     exitWithError(
       GitErrors.DIVERGED,
-      "You're trying to release on a diverged branch. Sync to remote or try again with '--no-git.requireSync' to ignore this error'."
+      "You're trying to release on a diverged branch. Sync to remote or try again with '--no-git.requireSync' to ignore this error."
     )
   }
 }

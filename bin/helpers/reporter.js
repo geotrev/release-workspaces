@@ -16,8 +16,6 @@ function newConsoleLine() {
 
 export function exitWithError(error, m) {
   newConsoleLine()
-  /* eslint-disable-next-line no-console */
-  console.error("Error:", error)
-  reporter({ m, type: "fail" })
+  report({ m, type: "fail" })
   process.exit(1)
 }

@@ -3,7 +3,8 @@
 import { ReportSteps } from "../helpers/constants.js"
 import { getCommitCmd, getTagCmd, getPushCmd } from "../helpers/commands.js"
 import { setVersionToString } from "../helpers/transformers.js"
-import { reportCmd } from "../helpers/cmd.js"
+import { cmd, reportCmd } from "../helpers/cmd.js"
+import { setRollback } from "../helpers/rollback.js"
 
 export async function runCommit(config) {
   const {
@@ -28,6 +29,13 @@ export async function runCommit(config) {
       step: ReportSteps.COMMIT,
     })
 
+    setRollback(config, {
+      type: "commit",
+      callback: async () => {
+        await cmd("git reset --hard HEAD~1", config)
+      },
+    })
+
     if (postcommit) {
       await reportCmd(postcommit, { ...config, step: ReportSteps.POSTCOMMIT })
     }
@@ -45,6 +53,13 @@ export async function runCommit(config) {
     await reportCmd(getTagCmd(tagMsg, config.releaseVersion), {
       ...config,
       step: ReportSteps.TAG,
+    })
+
+    setRollback(config, {
+      type: "tag",
+      callback: async () => {
+        await cmd(`git tag --delete v${config.releaseVersion}`, config)
+      },
     })
 
     if (posttag) {

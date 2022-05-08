@@ -48,7 +48,7 @@ describe("cmd", () => {
       await cmd(command, { dryRun: true, verbose: true })
       // Then
       expect(report).toBeCalledWith(
-        expect.objectContaining({ m: command, type: "info", indent: false })
+        expect.objectContaining({ m: command, indent: false })
       )
     })
 
@@ -59,7 +59,7 @@ describe("cmd", () => {
       await cmd(command, { verbose: true })
       // Then
       expect(report).toBeCalledWith(
-        expect.objectContaining({ m: command, type: "info", indent: false })
+        expect.objectContaining({ m: command, indent: false })
       )
     })
   })

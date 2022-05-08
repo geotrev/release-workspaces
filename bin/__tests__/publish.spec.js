@@ -1,15 +1,19 @@
 import "../../.jest/mocks.js"
 import path from "path"
-import { getAddCommand, getPublishCommand } from "../helpers/commands.js"
+import { getPublishCommand } from "../helpers/commands.js"
 import { cmd } from "../helpers/cmd.js"
 import { report } from "../helpers/reporter.js"
 import { runPublish } from "../modules/publish.js"
+import { setRollback } from "../helpers/rollback.js"
 
 jest.mock("../helpers/cmd.js", () => ({
   cmd: jest.fn(),
 }))
 jest.mock("../helpers/reporter.js", () => ({
   report: jest.fn(),
+}))
+jest.mock("../helpers/rollback.js", () => ({
+  setRollback: jest.fn(),
 }))
 
 const entry = {
@@ -41,13 +45,6 @@ const baseConfig = {
 }
 
 describe("runPublish()", () => {
-  it("adds changes to stage", async () => {
-    // When
-    await runPublish(baseConfig, entry)
-    // Then
-    expect(cmd).toBeCalledWith(getAddCommand(), baseConfig, true)
-  })
-
   it("publishes package", async () => {
     // When
     await runPublish(baseConfig, entry)
@@ -111,6 +108,20 @@ describe("runPublish()", () => {
       getPublishCommand(entry.name, "beta"),
       config,
       true
+    )
+  })
+
+  it("adds publish action if public", async () => {
+    // When
+    await runPublish(baseConfig, entry)
+    // Then
+    // eslint-disable-next-line no-unused-vars
+    expect(setRollback).toBeCalledWith(
+      expect.objectContaining(baseConfig),
+      expect.objectContaining({
+        type: "publish",
+        callback: expect.any(Function),
+      })
     )
   })
 
