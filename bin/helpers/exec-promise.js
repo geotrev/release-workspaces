@@ -5,5 +5,5 @@ import { promisify } from "util"
 
 const execPromise = promisify(execAsync)
 
-export const exec = async (cmd, opts = {}) =>
-  execPromise(cmd, { stdio: "ignore", cwd: process.cwd(), ...opts })
+export const exec = async (cmd, options = {}) =>
+  execPromise(cmd, { stdio: "ignore", cwd: process.cwd(), ...options })

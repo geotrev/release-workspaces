@@ -35,7 +35,6 @@ describe("cmd", () => {
     await cmd(command, baseConfig)
     // Then
     expect(exitWithError).toBeCalledWith(
-      expect.any(Object),
       `Unable to complete command: ${command}`
     )
   })
@@ -47,9 +46,7 @@ describe("cmd", () => {
       // When
       await cmd(command, { dryRun: true, verbose: true })
       // Then
-      expect(report).toBeCalledWith(
-        expect.objectContaining({ m: command, type: "info", indent: false })
-      )
+      expect(report).toBeCalledWith(expect.objectContaining({ m: command }))
     })
 
     it("reports command if verbose", async () => {
@@ -58,9 +55,7 @@ describe("cmd", () => {
       // When
       await cmd(command, { verbose: true })
       // Then
-      expect(report).toBeCalledWith(
-        expect.objectContaining({ m: command, type: "info", indent: false })
-      )
+      expect(report).toBeCalledWith(expect.objectContaining({ m: command }))
     })
   })
 })
@@ -78,7 +73,6 @@ describe("reportCmd", () => {
         expect.objectContaining({
           m: step,
           type: "start",
-          indent: false,
         })
       )
     })
@@ -94,7 +88,6 @@ describe("reportCmd", () => {
         expect.objectContaining({
           m: `${step} successful`,
           type: "succeed",
-          indent: false,
         })
       )
     })

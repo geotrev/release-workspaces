@@ -66,12 +66,12 @@ function setDependencies(config, entry) {
 
     if (config.dryRun) {
       if (config.verbose) {
-        report({ m: writeCommand, type: "info", indent: true })
+        report({ m: writeCommand, type: "info" })
       }
     } else {
       try {
         if (config.verbose) {
-          report({ m: writeCommand, type: "info", indent: true })
+          report({ m: writeCommand, type: "info" })
         }
 
         fs.writeFileSync(
@@ -80,18 +80,28 @@ function setDependencies(config, entry) {
           "utf8"
         )
       } catch (e) {
-        exitWithError(e, "Unable to update package.json.")
+        exitWithError("Unable to update package.json.")
       }
     }
   }
 }
 
 export async function runIncrement(config, entry) {
-  report({ m: "Version", type: "start", indent: true })
+  const message = `${entry.name} | ${config.prevVersion} -> ${config.releaseVersion}`
+
+  report({
+    m: message,
+    type: "start",
+  })
 
   await cmd(getVersionCommand(entry.name, config.releaseVersion), config, true)
-
   setDependencies(config, entry)
 
-  report({ m: "Version successful", type: "succeed", indent: true })
+  report({
+    m: {
+      text: message,
+      symbol: "📦",
+    },
+    type: "stopAndPersist",
+  })
 }

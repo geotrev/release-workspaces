@@ -2,14 +2,23 @@ import "../../.jest/mocks.js"
 import { ReportSteps } from "../helpers/constants.js"
 import { getCommitCmd, getTagCmd, getPushCmd } from "../helpers/commands.js"
 import { setVersionToString } from "../helpers/transformers.js"
+import { setRollback } from "../helpers/rollback.js"
 import { reportCmd } from "../helpers/cmd.js"
 import { runCommit } from "../modules/commit.js"
 
 jest.mock("../helpers/cmd.js", () => ({
   reportCmd: jest.fn(),
+  cmd: jest.fn(),
+}))
+
+jest.mock("../helpers/rollback.js", () => ({
+  setRollback: jest.fn(),
 }))
 
 const baseConfig = {
+  npm: {
+    increment: true,
+  },
   releaseVersion: "0.0.0",
   hooks: {
     precommit: "npm test",
@@ -36,7 +45,7 @@ describe("runCommit()", () => {
     })
   })
 
-  describe("commit is true", () => {
+  describe("commit and increment is true", () => {
     let config
 
     beforeEach(async () => {
@@ -80,6 +89,35 @@ describe("runCommit()", () => {
           step: ReportSteps.POSTCOMMIT,
         })
       )
+    })
+
+    it("calls setRollback", async () => {
+      expect(setRollback).toBeCalledWith(
+        expect.objectContaining(config),
+        expect.objectContaining({
+          type: "commit",
+          callback: expect.any(Function),
+        })
+      )
+    })
+  })
+
+  describe("increment is false", () => {
+    let config
+
+    beforeEach(async () => {
+      // Given
+      config = {
+        ...baseConfig,
+        npm: { increment: false },
+        git: { ...baseConfig.git, commit: true, push: false, tag: false },
+      }
+      // When
+      await runCommit(config)
+    })
+
+    it("doesn't run commit command", async () => {
+      expect(reportCmd).not.toBeCalledWith()
     })
   })
 
@@ -125,6 +163,16 @@ describe("runCommit()", () => {
         expect.objectContaining({
           ...config,
           step: ReportSteps.POSTTAG,
+        })
+      )
+    })
+
+    it("calls setRollback", async () => {
+      expect(setRollback).toBeCalledWith(
+        expect.objectContaining(config),
+        expect.objectContaining({
+          type: "tag",
+          callback: expect.any(Function),
         })
       )
     })

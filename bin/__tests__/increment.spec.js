@@ -40,6 +40,7 @@ const entryTwo = {
 const config = {
   dryRun: false,
   verbose: false,
+  prevVersion: "0.0.0",
   releaseVersion: "0.0.1",
   packageNames,
   packages: [entryOne, entryTwo],
@@ -137,7 +138,6 @@ describe("runIncrement()", () => {
         expect.objectContaining({
           m: `fs.writeFileSync(path.resolve(dir, "package.json"), newPkgJson, "utf8")`,
           type: "info",
-          indent: true,
         })
       )
     })
@@ -152,7 +152,6 @@ describe("runIncrement()", () => {
         expect.objectContaining({
           m: `fs.writeFileSync(path.resolve(dir, "package.json"), newPkgJson, "utf8")`,
           type: "info",
-          indent: true,
         })
       )
     })
@@ -163,9 +162,8 @@ describe("runIncrement()", () => {
       // Then
       expect(report).toBeCalledWith(
         expect.objectContaining({
-          m: "Version",
+          m: `${entryTwo.name} | ${config.prevVersion} -> ${config.releaseVersion}`,
           type: "start",
-          indent: true,
         })
       )
     })
@@ -176,9 +174,11 @@ describe("runIncrement()", () => {
       // Then
       expect(report).toBeCalledWith(
         expect.objectContaining({
-          m: "Version successful",
-          type: "succeed",
-          indent: true,
+          m: {
+            text: `${entryTwo.name} | ${config.prevVersion} -> ${config.releaseVersion}`,
+            symbol: "📦",
+          },
+          type: "stopAndPersist",
         })
       )
     })

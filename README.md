@@ -5,7 +5,7 @@
   <a href="https://github.com/geotrev/release-workspaces/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/release-workspaces.svg?sanitize=true&style=flat-square" alt="License"></a>
   <a href="https://github.com/geotrev/release-workspaces/actions/workflows/test.yml?query=branch%3Amain"><img src="https://badgen.net/github/checks/geotrev/release-workspaces/main?style=flat-square" alt="CI status" /></a>
   <div align="center">
-    <img width="500px" height="auto" src="https://github.com/geotrev/release-workspaces/raw/main/demo.gif" />
+    <img width="600px" height="auto" src="https://github.com/geotrev/release-workspaces/raw/main/demo2.gif" />
   </div>
 </p>
 
@@ -41,9 +41,8 @@
 
 This tool assumes a few things about your workflow:
 
-- You're using npm workspaces (of course) (node 17.x)
+- You're using npm workspaces (of course) (npm 7.x)
 - All your packages will use the same version for each release
-- You're working in a [module architecture](https://nodejs.org/api/packages.html#introduction)
 
 ## Usage
 

@@ -5,13 +5,6 @@ export const ROOT_PACKAGE_FILE = "package.json"
 export const ROOT_CONFIG_FILE = `.${CONFIG_NAME}.json`
 export const VERSION_INSERT = "${version}"
 
-export const GitErrors = {
-  NEEDS_PULL: "Behind remote",
-  NEEDS_PUSH: "Ahead of remote",
-  DIVERGED: "Diverged",
-  UNSTAGED: "Unstaged changes",
-}
-
 export const RELEASE_INCREMENTS = [
   "major",
   "minor",
@@ -23,6 +16,10 @@ export const RELEASE_INCREMENTS = [
 ]
 
 export const ReportSteps = {
+  PREINCREMENT: "Preincrement",
+  POSTINCREMENT: "Postincrement",
+  PREPUBLISH: "Prepublish",
+  POSTPUBLISH: "Postpublish",
   PRECOMMIT: "Precommit",
   COMMIT: "Commit",
   POSTCOMMIT: "Postcommit",

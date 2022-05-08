@@ -59,7 +59,6 @@ export async function setRootVersion(config) {
         )
       } catch (e) {
         exitWithError(
-          e,
           "Unable to update config. Rerun with `--no-npm.increment --no-npm.publish` to try again."
         )
       }
@@ -83,7 +82,6 @@ export async function setRootVersion(config) {
         )
       } catch (e) {
         exitWithError(
-          e,
           "Unable to update package.json. Rerun with `--no-npm.increment --no-npm.publish` to try again."
         )
       }
@@ -93,5 +91,5 @@ export async function setRootVersion(config) {
   const addChangesCommand = "git add . -u"
   await cmd(addChangesCommand, config)
 
-  report({ type: "succeed" })
+  report({ m: "Root version updated", type: "succeed" })
 }

@@ -3,20 +3,23 @@
 import { ReportSteps } from "../helpers/constants.js"
 import { getCommitCmd, getTagCmd, getPushCmd } from "../helpers/commands.js"
 import { setVersionToString } from "../helpers/transformers.js"
-import { reportCmd } from "../helpers/cmd.js"
+import { cmd, reportCmd } from "../helpers/cmd.js"
+import { setRollback } from "../helpers/rollback.js"
 
 export async function runCommit(config) {
   const {
-    commitMessage,
-    tagMessage,
-    tag: shouldTag,
-    commit: shouldCommit,
-    push: shouldPush,
-  } = config.git
-  const { precommit, postcommit, pretag, posttag, prepush, postpush } =
-    config.hooks
+    npm: { increment },
+    git: {
+      commitMessage,
+      tagMessage,
+      tag: shouldTag,
+      commit: shouldCommit,
+      push: shouldPush,
+    },
+    hooks: { precommit, postcommit, pretag, posttag, prepush, postpush },
+  } = config
 
-  if (shouldCommit) {
+  if (shouldCommit && increment) {
     const commitMsg = setVersionToString(commitMessage, config.releaseVersion)
 
     if (precommit) {
@@ -26,6 +29,13 @@ export async function runCommit(config) {
     await reportCmd(getCommitCmd(commitMsg), {
       ...config,
       step: ReportSteps.COMMIT,
+    })
+
+    setRollback(config, {
+      type: "commit",
+      callback: async () => {
+        await cmd("git reset --hard HEAD~1", config)
+      },
     })
 
     if (postcommit) {
@@ -41,6 +51,13 @@ export async function runCommit(config) {
     if (pretag) {
       await reportCmd(pretag, { ...config, step: ReportSteps.PRETAG })
     }
+
+    setRollback(config, {
+      type: "tag",
+      callback: async () => {
+        await cmd(`git tag --delete v${config.releaseVersion}`, config)
+      },
+    })
 
     await reportCmd(getTagCmd(tagMsg, config.releaseVersion), {
       ...config,

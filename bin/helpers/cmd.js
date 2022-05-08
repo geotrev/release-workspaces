@@ -2,7 +2,7 @@ import { exec } from "./exec-promise.js"
 import { report, exitWithError } from "./reporter.js"
 
 export async function cmd(command, config, indent = false) {
-  const info = { m: command, type: "info", indent }
+  const info = { m: command, indent }
 
   if (config.dryRun) {
     if (config.verbose) {
@@ -16,15 +16,15 @@ export async function cmd(command, config, indent = false) {
 
       await exec(command)
     } catch (e) {
-      exitWithError(e, `Unable to complete command: ${command}`)
+      exitWithError(`Unable to complete command: ${command}`)
     }
   }
 }
 
-export async function reportCmd(command, config, indent = false) {
-  report({ m: config.step, type: "start", indent })
+export async function reportCmd(command, config) {
+  report({ m: config.step, type: "start" })
 
-  await cmd(command, config, indent)
+  await cmd(command, config)
 
-  report({ m: `${config.step} successful`, type: "succeed", indent })
+  report({ m: `${config.step} successful`, type: "succeed" })
 }

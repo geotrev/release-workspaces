@@ -21,7 +21,6 @@ function validatePackagePaths(dir) {
 
   if (dir.indexOf(rootDirName) === -1) {
     exitWithError(
-      "Invalid root",
       "Workspace directory(ies) are outside your current working directory."
     )
   }
@@ -47,7 +46,6 @@ function normalizeConfigCategory(config, category) {
       }
 
       exitWithError(
-        "Invalid config value",
         `Invalid value given to config.${category}.${key}, expected ${configDefaultType}`
       )
     }
@@ -60,10 +58,7 @@ function createPackageMeta(pkgs, dir) {
   const pkgPath = path.resolve(dir, ROOT_PACKAGE_FILE)
 
   if (!fs.existsSync(pkgPath)) {
-    exitWithError(
-      "No package.json",
-      "Package root is missing package.json, unable to proceed"
-    )
+    exitWithError("Package root is missing package.json, unable to proceed")
   }
 
   const getPackage = () => JSON.parse(fs.readFileSync(pkgPath, "utf8"))
@@ -92,10 +87,7 @@ export function normalizeConfig(config) {
   const workspaces = rootPackage.workspaces
 
   if (!Array.isArray(workspaces)) {
-    exitWithError(
-      "No workspaces",
-      "This repository doesn't appear to have workspaces."
-    )
+    exitWithError("This repository doesn't appear to have workspaces.")
   } else {
     config.packages = workspaces
   }
@@ -122,16 +114,14 @@ export function normalizeConfig(config) {
 
   if (!prevVersion) {
     exitWithError(
-      "Missing version",
-      "No version defined in project root. Add a 'version' field to config file or root package.json to proceed."
+      "No version defined in project root. Add a 'metadata.version' field to your config file or 'version' field to your root package.json to proceed."
     )
   }
 
   let releaseVersion
 
-  if (config.incrementTo) {
+  if (config.npm.increment && config.incrementTo) {
     const isValidCustomIncrement =
-      config.npm.increment &&
       semver.valid(config.incrementTo) &&
       semver.gt(config.incrementTo, prevVersion)
 
@@ -139,7 +129,6 @@ export function normalizeConfig(config) {
       releaseVersion = config.incrementTo
     } else {
       exitWithError(
-        "Bad custom version",
         `Custom version '${config.incrementTo}' is either not a string, an invalid semver string, or less than the existing version ('${prevVersion}').`
       )
     }
@@ -151,7 +140,6 @@ export function normalizeConfig(config) {
 
   if (!releaseVersion) {
     exitWithError(
-      "Bad increment",
       `Invalid version increment requested: ${
         config.incrementTo || config.increment
       }`
