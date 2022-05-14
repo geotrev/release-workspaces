@@ -16,6 +16,9 @@ jest.mock("../helpers/rollback.js", () => ({
 }))
 
 const baseConfig = {
+  npm: {
+    increment: true,
+  },
   releaseVersion: "0.0.0",
   hooks: {
     precommit: "npm test",
@@ -42,7 +45,7 @@ describe("runCommit()", () => {
     })
   })
 
-  describe("commit is true", () => {
+  describe("commit and increment is true", () => {
     let config
 
     beforeEach(async () => {
@@ -96,6 +99,25 @@ describe("runCommit()", () => {
           callback: expect.any(Function),
         })
       )
+    })
+  })
+
+  describe("increment is false", () => {
+    let config
+
+    beforeEach(async () => {
+      // Given
+      config = {
+        ...baseConfig,
+        npm: { increment: false },
+        git: { ...baseConfig.git, commit: true, push: false, tag: false },
+      }
+      // When
+      await runCommit(config)
+    })
+
+    it("runs commit command", async () => {
+      expect(reportCmd).not.toBeCalledWith()
     })
   })
 

@@ -8,16 +8,18 @@ import { setRollback } from "../helpers/rollback.js"
 
 export async function runCommit(config) {
   const {
-    commitMessage,
-    tagMessage,
-    tag: shouldTag,
-    commit: shouldCommit,
-    push: shouldPush,
-  } = config.git
-  const { precommit, postcommit, pretag, posttag, prepush, postpush } =
-    config.hooks
+    npm: { increment },
+    git: {
+      commitMessage,
+      tagMessage,
+      tag: shouldTag,
+      commit: shouldCommit,
+      push: shouldPush,
+    },
+    hooks: { precommit, postcommit, pretag, posttag, prepush, postpush },
+  } = config
 
-  if (shouldCommit) {
+  if (shouldCommit && increment) {
     const commitMsg = setVersionToString(commitMessage, config.releaseVersion)
 
     if (precommit) {
@@ -50,16 +52,16 @@ export async function runCommit(config) {
       await reportCmd(pretag, { ...config, step: ReportSteps.PRETAG })
     }
 
-    await reportCmd(getTagCmd(tagMsg, config.releaseVersion), {
-      ...config,
-      step: ReportSteps.TAG,
-    })
-
     setRollback(config, {
       type: "tag",
       callback: async () => {
         await cmd(`git tag --delete v${config.releaseVersion}`, config)
       },
+    })
+
+    await reportCmd(getTagCmd(tagMsg, config.releaseVersion), {
+      ...config,
+      step: ReportSteps.TAG,
     })
 
     if (posttag) {

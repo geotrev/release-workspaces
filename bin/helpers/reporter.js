@@ -14,7 +14,7 @@ function newConsoleLine() {
   console.log("")
 }
 
-export function exitWithError(error, m) {
+export function exitWithError(m) {
   newConsoleLine()
   report({ m, type: "fail" })
   process.exit(1)

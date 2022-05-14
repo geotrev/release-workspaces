@@ -2,7 +2,6 @@
 
 import { exec } from "./exec-promise.js"
 import { exitWithError } from "./reporter.js"
-import { GitErrors } from "./constants.js"
 
 export async function checkUnstaged(config) {
   const {
@@ -15,7 +14,6 @@ export async function checkUnstaged(config) {
 
   if (unstaged) {
     exitWithError(
-      GitErrors.UNSTAGED,
       "You're trying to release from a dirty working directory. Sync to remote or try again with '--no-git.requireCleanDir'."
     )
   }
@@ -44,17 +42,14 @@ export async function checkRefStatus(config) {
     // branch is OK
   } else if (local === base) {
     exitWithError(
-      GitErrors.NEEDS_PULL,
       "Your branch is behind the remote. Pull from remote or try again with '--no-git.requireSync' to ignore this error"
     )
   } else if (remote === base) {
     exitWithError(
-      GitErrors.NEEDS_PUSH,
       "Your branch is ahead of the remote. Push to remote or try again with '--no-git.requireSync' to ignore this error"
     )
   } else {
     exitWithError(
-      GitErrors.DIVERGED,
       "You're trying to release on a diverged branch. Sync to remote or try again with '--no-git.requireSync' to ignore this error."
     )
   }

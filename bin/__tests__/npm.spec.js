@@ -86,7 +86,24 @@ describe("runNpm()", () => {
   })
 
   describe("report", () => {
-    it("reports for each package", async () => {
+    it("reports version for each package", async () => {
+      // When
+      await runNpm(config)
+      // Then
+      for (const pkg of config.packages) {
+        expect(report).toBeCalledWith(
+          expect.objectContaining({
+            m: {
+              text: `${pkg.name}@${config.releaseVersion}`,
+              symbol: "🔼",
+            },
+            type: "stopAndPersist",
+          })
+        )
+      }
+    })
+
+    it("reports publish for each package", async () => {
       // When
       await runNpm(config)
       // Then
@@ -103,13 +120,49 @@ describe("runNpm()", () => {
       }
     })
 
-    it("reports success", async () => {
+    it("reports version/publish success", async () => {
       // When
       await runNpm(config)
       // Then
       expect(report).toBeCalledWith(
         expect.objectContaining({
-          m: "All packages versioned/published without errors",
+          m: "All packages versioned/published successfully",
+          type: "succeed",
+        })
+      )
+    })
+
+    it("reports version success", async () => {
+      // When
+      await runNpm({ ...config, npm: { publish: false, increment: true } })
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "All packages versioned successfully (publish skipped)",
+          type: "succeed",
+        })
+      )
+    })
+
+    it("reports publish success", async () => {
+      // When
+      await runNpm({ ...config, npm: { publish: true, increment: false } })
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "All packages published successfully (version skipped)",
+          type: "succeed",
+        })
+      )
+    })
+
+    it("reports version/publish skipped", async () => {
+      // When
+      await runNpm({ ...config, npm: { publish: false, increment: false } })
+      // Then
+      expect(report).toBeCalledWith(
+        expect.objectContaining({
+          m: "Version/publish skipped for all packages",
           type: "succeed",
         })
       )

@@ -17,10 +17,6 @@ export async function runNpm(config) {
   } = config
   const length = packages.length
 
-  if (preincrement) {
-    await reportCmd(preincrement, { ...config, step: ReportSteps.PREINCREMENT })
-  }
-
   setRollback(config, {
     type: "increment",
     callback: async () => {
@@ -28,66 +24,88 @@ export async function runNpm(config) {
     },
   })
 
-  for (let i = 0; i < length; i++) {
-    const entry = packages[i]
-    const { name } = entry
+  if (increment) {
+    if (preincrement) {
+      await reportCmd(preincrement, {
+        ...config,
+        step: ReportSteps.PREINCREMENT,
+      })
+    }
 
-    report({
-      m: {
-        text: `${name}@${config.releaseVersion}`,
-        symbol: "📦",
-      },
-      type: "stopAndPersist",
-    })
+    for (let i = 0; i < length; i++) {
+      const entry = packages[i]
+      const { name } = entry
 
-    if (increment) {
+      report({
+        m: {
+          text: `${name}@${config.releaseVersion}`,
+          symbol: "🔼",
+        },
+        type: "stopAndPersist",
+      })
+
       await runIncrement(config, entry)
     }
-  }
 
-  if (increment) {
-    // Stage increment changes
+    // Set root version to config/package.json, then stage changes
+    await setRootVersion(config)
     await cmd(getAddCommand(), config)
-  }
 
-  if (postincrement) {
-    await reportCmd(postincrement, {
-      ...config,
-      step: ReportSteps.POSTINCREMENT,
-    })
-  }
-
-  if (prepublish) {
-    await reportCmd(prepublish, { ...config, step: ReportSteps.PREPUBLISH })
-  }
-
-  for (let i = 0; i < length; i++) {
-    const entry = packages[i]
-    const { name } = entry
-
-    report({
-      m: {
-        text: `${name}@${config.releaseVersion}`,
-        symbol: "📦",
-      },
-      type: "stopAndPersist",
-    })
-
-    if (publish) {
-      await runPublish(config, entry)
+    if (postincrement) {
+      await reportCmd(postincrement, {
+        ...config,
+        step: ReportSteps.POSTINCREMENT,
+      })
     }
   }
 
-  if (postpublish) {
-    await reportCmd(postpublish, { ...config, step: ReportSteps.POSTPUBLISH })
+  if (publish) {
+    if (prepublish) {
+      await reportCmd(prepublish, { ...config, step: ReportSteps.PREPUBLISH })
+    }
+
+    for (let i = 0; i < length; i++) {
+      const entry = packages[i]
+      const { name } = entry
+
+      report({
+        m: {
+          text: `${name}@${config.releaseVersion}`,
+          symbol: "📦",
+        },
+        type: "stopAndPersist",
+      })
+
+      await runPublish(config, entry)
+    }
+
+    if (postpublish) {
+      await reportCmd(postpublish, { ...config, step: ReportSteps.POSTPUBLISH })
+    }
   }
 
-  if (increment) {
-    await setRootVersion(config)
-  }
+  if (increment || publish) {
+    const action =
+      increment && publish
+        ? "versioned/published"
+        : increment
+        ? "versioned"
+        : "published"
+    const suffix =
+      increment && publish
+        ? ""
+        : !increment
+        ? " (version skipped)"
+        : " (publish skipped)"
 
-  report({
-    m: "All packages versioned/published without errors",
-    type: "succeed",
-  })
+    report({
+      m: `All packages ${action} successfully${suffix}`,
+      type: "succeed",
+    })
+  } else {
+    report({
+      m: "Version/publish skipped for all packages",
+      type: "succeed",
+    })
+  }
 }

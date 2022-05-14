@@ -35,7 +35,6 @@ describe("cmd", () => {
     await cmd(command, baseConfig)
     // Then
     expect(exitWithError).toBeCalledWith(
-      expect.any(Object),
       `Unable to complete command: ${command}`
     )
   })

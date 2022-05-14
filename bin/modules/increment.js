@@ -80,7 +80,7 @@ function setDependencies(config, entry) {
           "utf8"
         )
       } catch (e) {
-        exitWithError(e, "Unable to update package.json.")
+        exitWithError("Unable to update package.json.")
       }
     }
   }

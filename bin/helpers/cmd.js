@@ -16,7 +16,7 @@ export async function cmd(command, config, indent = false) {
 
       await exec(command)
     } catch (e) {
-      exitWithError(e, `Unable to complete command: ${command}`)
+      exitWithError(`Unable to complete command: ${command}`)
     }
   }
 }
