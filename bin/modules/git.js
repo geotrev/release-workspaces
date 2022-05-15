@@ -6,7 +6,7 @@ import { setVersionToString } from "../helpers/transformers.js"
 import { cmd, reportCmd } from "../helpers/cmd.js"
 import { setRollback } from "../helpers/rollback.js"
 
-export async function runCommit(config) {
+export async function runGit(config) {
   const {
     npm: { increment },
     git: {

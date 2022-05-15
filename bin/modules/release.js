@@ -3,7 +3,7 @@
 import { getArgs } from "../helpers/get-args.js"
 import { enableRollback, disableRollback } from "../helpers/rollback.js"
 import { runNpm } from "./npm.js"
-import { runCommit } from "./commit.js"
+import { runGit } from "./git.js"
 import { initialize } from "./initialize.js"
 
 export async function release() {
@@ -28,7 +28,7 @@ export async function release() {
   // Commit changes, create tag, and push to origin
 
   if (commit || tag) {
-    await runCommit(config)
+    await runGit(config)
   }
 
   disableRollback()

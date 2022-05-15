@@ -2,7 +2,7 @@ import "../../.jest/mocks.js"
 import { getArgs } from "../helpers/get-args.js"
 import { enableRollback, disableRollback } from "../helpers/rollback.js"
 import { runNpm } from "../modules/npm.js"
-import { runCommit } from "../modules/commit.js"
+import { runGit } from "../modules/git.js"
 import { release } from "../modules/release.js"
 
 jest.mock("../helpers/get-args.js")
@@ -10,8 +10,8 @@ jest.mock("../helpers/rollback.js", () => ({
   disableRollback: jest.fn(),
   enableRollback: jest.fn(),
 }))
-jest.mock("../modules/commit.js", () => ({
-  runCommit: jest.fn(),
+jest.mock("../modules/git.js", () => ({
+  runGit: jest.fn(),
 }))
 jest.mock("../modules/initialize.js")
 jest.mock("../modules/npm.js", () => ({
@@ -63,6 +63,6 @@ describe("release()", () => {
     // When
     await release()
     // Then
-    expect(runCommit).toBeCalled()
+    expect(runGit).toBeCalled()
   })
 })

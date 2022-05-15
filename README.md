@@ -28,7 +28,7 @@
 
 ## About
 
-`release-workspaces` brings the power of tools like Lerna and Release It! into one package, built to work with [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces). Using this utility, you can do the following:
+`release-workspaces` brings the power of Release It! to monorepos. All built with [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces) in mind. Using this utility, you can do the following:
 
 - Version packages
 - Publish packages
@@ -37,23 +37,31 @@
 
 <p><small>*See <a href="#roadmap">roadmap</a></small></p>
 
+### Scope & Goals
+
+One of the key benefits of npm workspaces is running commands across packages, and managing inter-package dependencies. However, like non-workspace projects, versioning and publishing is more or less a very manual process.
+
+It's therefore _not_ in the perview of this package to interact with behavior beyond versioning and publishing.
+
 ## Assumptions
 
 This tool assumes a few things about your workflow:
 
-- You're using npm workspaces (of course) (npm 7.x)
+- You're using npm workspaces (npm 7.x)
 - All your packages will use the same version for each release
 
 ## Usage
 
 `release-workspaces` is used primarily as a command line integration tool combined with an optional configuration file.
 
-The basic requirement is to have a `version` field defined in your root `package.json` (you can alternatively add [`metadata.version`](#metadata) to your config file). This will be the version of your packages, and is automatically updated for you after a release succeeds, but before the git step.
+The basic requirement is to have a `version` field defined in your root `package.json` (you can alternatively add [`metadata.version`](#metadata) to your config file). This will be the version of your packages, and is automatically updated for you after a release succeeds.
 
 Using the tool can be as simple as this:
 
 ```sh
 $ release-workspaces --increment major
+# or
+$ release-workspaces -i major
 ```
 
 With only a `version` field in your root `package.json`, mind you!
@@ -61,10 +69,10 @@ With only a `version` field in your root `package.json`, mind you!
 Here's a more complex example of incrementing packages from prerelease, to release candidate, to minor version.
 
 ```sh
-$ release-workspaces --increment preminor --preid alpha # 0.1.0 -> 0.2.0-alpha.0
-$ release-workspaces --increment prerelease # 0.2.0-alpha.1
-$ release-workspaces --increment prerelease --preid rc --npm-tag next # 0.2.0-rc.0 @ next
-$ release-workspaces --increment minor # 0.2.0
+$ release-workspaces -i preminor --preid alpha # 0.1.0 -> 0.2.0-alpha.0
+$ release-workspaces -i prerelease # 0.2.0-alpha.1
+$ release-workspaces -i prerelease --preid rc --npm-tag next # 0.2.0-rc.0 @ next
+$ release-workspaces -i minor # 0.2.0
 ```
 
 ### Config File
@@ -105,6 +113,8 @@ Defaults:
 }
 ```
 
+_NOTE: Setting both `increment` and `publish` to `false` is a valid configuration if you only wish to tag the latest commit._
+
 #### `git`
 
 Configures how to run git operations (commit, tag, push). Use `${version}` in string values to insert the new version when processed.
@@ -132,7 +142,8 @@ Configures the tool to run scripts during the execution lifecycle. If you need t
 
 Available hooks:
 
-- `prenpm`, `postnpm`: Runs before/after packages are versioned & published
+- `preincrement`, `postincrement`: Runs before/after packages are versioned
+- `prepublish`, `postpublish`: Runs before/after packages are published
 - `precommit`, `postcommit`: Runs before/after publish artifacts are committed
 - `pretag`, `posttag`: Runs before/after a release tag is generated
 - `prepush`, `postpush`: Runs before/after the commit is pushed to the remote (does not run if both `config.git.commit` and `config.git.tag` are false)
@@ -143,14 +154,14 @@ Arguments passed through the CLI will be passed verbatim to and validated by [se
 
 #### Release Flags
 
-| Name                   | Type    | Description                                                                  |
-| ---------------------- | ------- | ---------------------------------------------------------------------------- |
-| `--increment`, `-i`    | string  | The release increment. E.g. `minor`, `prepatch`, `prerelease`, etc.          |
-| `--increment-to`, `-s` | string  | A specific version to publish. E.g., `3.0.0`, `3.0.0-rc.2`, etc.             |
-| `--preid`, `-p`        | string  | Sets the prerelease id. E.g. `alpha`, `rc`, etc.                             |
-| `--npm-tag`, `-n`      | string  | If given, sets the npm publish tag. Otherwise uses the `preid`. E.g. `next`. |
-| `--dry-run`, `-d`      | boolean | Prints normal output but doesn't execute.                                    |
-| `--verbose`, `-b`      | boolean | Prints all commands (can be used with `--dry-run`/`-d`).                     |
+| Name                   | Type    | Description                                                                        |
+| ---------------------- | ------- | ---------------------------------------------------------------------------------- |
+| `--increment`, `-i`    | string  | The release increment. E.g. `minor`, `prepatch`, `prerelease`, etc.                |
+| `--increment-to`, `-s` | string  | A specific version to publish. E.g., `3.0.0`, `3.0.0-rc.2`, etc.                   |
+| `--preid`, `-p`        | string  | Sets the prerelease id. E.g. `alpha`, `rc`, etc.                                   |
+| `--npm-tag`, `-n`      | string  | If given, sets the npm publish tag. Otherwise uses the `preid`. E.g. `next`.       |
+| `--dry-run`, `-d`      | boolean | Prints normal output but doesn't execute.                                          |
+| `--verbose`, `-b`      | boolean | Prints all commands and mutating script calls (can be used with `--dry-run`/`-d`). |
 
 Note that if `--npm-tag` isn't given, then the tool will fall back to the value given for `--preid`, else it will use `latest`.
 
@@ -160,7 +171,7 @@ Similarly, if you run a git-only release (no version, no publish), the tool will
 
 Using config options via CLI will override your config. Useful for one-off releases and otherwise augmenting a base configuration for release types (alpha release, release candidate, no-increment publish, etc).
 
-You can use any of the existing config options as CLI flags by using the formula `--<key>.<property> [value]`. E.g., change the default or user-configured commit message: `--git.commitMessage "chore: release ${version}"` or disable all git checks with `--git.skipChecks`.
+You can use any of the existing config options as CLI flags by using the formula `--<key>.<property> [value]`. E.g., change the default or user-configured commit message: `--git.commitMessage "chore: release \${version}"` or disable all git checks with `--git.skipChecks`.
 
 Similarly, you can negate any boolean option by prepending `--no-` to it. E.g., `--no-git.requireCleanDir`.
 
@@ -168,21 +179,21 @@ Similarly, you can negate any boolean option by prepending `--no-` to it. E.g., 
 
 Here are a few handy examples of how to achieve certain release results with CLI flags. Replace `minor` with your intended release increment.
 
-| Description                     | Example                                                                                    |
-| ------------------------------- | ------------------------------------------------------------------------------------------ |
-| Do everything                   | `$ release-workspaces -i minor`                                                            |
-| Prerelease                      | `$ release-workspaces -i preminor -p alpha`                                                |
-| Increment prerelease            | `$ release-workspaces -i prerelease`                                                       |
-| Update prerelease id w/ npm tag | `$ release-workspaces -i prerelease -p rc -n next`                                         |
-| Increment to a specific version | `$ release-workspaces -s 3.0.0`                                                            |
-| Skip npm version                | `$ release-workspaces --no-npm.increment`                                                  |
-| Skip npm publish                | `$ release-workspaces -i minor --no-npm.publish`                                           |
-| Skip all npm operations         | `$ release-workspaces --no-npm.increment --no-npm.publish`                                 |
-| Skip clean directory check      | `$ release-workspaces -i minor --no-git.requireCleanDir`                                   |
-| Skip git sync check             | `$ release-workspaces -i minor --no-git.requireSync`                                       |
-| Skip all git checks             | `$ release-workspaces -i minor --git.skipChecks`                                           |
-| Skip git operation              | `$ release-workspaces -i minor --no-git.[commit/tag/push]`                                 |
-| Set custom messaging            | `$ release-workspaces -i minor --git.[commitMessage/tagMessage] "Custom msg: \${version}"` |
+| Description                     | Example                                                                                       |
+| ------------------------------- | --------------------------------------------------------------------------------------------- |
+| Do everything                   | `$ release-workspaces -i minor`                                                               |
+| Prerelease                      | `$ release-workspaces -i preminor -p alpha`                                                   |
+| Increment prerelease            | `$ release-workspaces -i prerelease`                                                          |
+| Update prerelease id w/ npm tag | `$ release-workspaces -i prerelease -p rc -n next`                                            |
+| Increment to a specific version | `$ release-workspaces -s 3.0.0`                                                               |
+| Skip npm version                | `$ release-workspaces --no-npm.increment`                                                     |
+| Skip npm publish                | `$ release-workspaces -i minor --no-npm.publish`                                              |
+| Skip all npm operations         | `$ release-workspaces --no-npm.increment --no-npm.publish`                                    |
+| Skip clean directory check      | `$ release-workspaces -i minor --no-git.requireCleanDir`                                      |
+| Skip git sync check             | `$ release-workspaces -i minor --no-git.requireSync`                                          |
+| Skip all git checks             | `$ release-workspaces -i minor --git.skipChecks`                                              |
+| Skip git operation              | `$ release-workspaces -i minor --no-git.[commit/tag/push]`                                    |
+| Set custom messaging            | `$ release-workspaces -i minor --git.[commitMessage/tagMessage] "Custom msg for \${version}"` |
 
 ## Clarifications & Gotchas
 
@@ -195,6 +206,6 @@ There are some contradictory or otherwise unclear config combinations to note.
 
 ## Roadmap
 
-- [ ] Release in CI
-- [ ] Rollback changes if failures occur mid-release
+- [x] Rollback changes if failures occur mid-release
 - [ ] Automate GitHub/GitLab releases
+- [ ] Release in CI

@@ -4,7 +4,7 @@ import { getCommitCmd, getTagCmd, getPushCmd } from "../helpers/commands.js"
 import { setVersionToString } from "../helpers/transformers.js"
 import { setRollback } from "../helpers/rollback.js"
 import { reportCmd } from "../helpers/cmd.js"
-import { runCommit } from "../modules/commit.js"
+import { runGit } from "../modules/git.js"
 
 jest.mock("../helpers/cmd.js", () => ({
   reportCmd: jest.fn(),
@@ -37,10 +37,10 @@ const baseConfig = {
   },
 }
 
-describe("runCommit()", () => {
+describe("runGit()", () => {
   describe("tag, commit, and push are false", () => {
     it("does not run commands", async () => {
-      await runCommit(baseConfig)
+      await runGit(baseConfig)
       expect(reportCmd).not.toBeCalled()
     })
   })
@@ -55,7 +55,7 @@ describe("runCommit()", () => {
         git: { ...baseConfig.git, commit: true },
       }
       // When
-      await runCommit(config)
+      await runGit(config)
     })
 
     it("runs precommit hook", async () => {
@@ -113,7 +113,7 @@ describe("runCommit()", () => {
         git: { ...baseConfig.git, commit: true, push: false, tag: false },
       }
       // When
-      await runCommit(config)
+      await runGit(config)
     })
 
     it("doesn't run commit command", async () => {
@@ -131,7 +131,7 @@ describe("runCommit()", () => {
         git: { ...baseConfig.git, tag: true },
       }
       // When
-      await runCommit(config)
+      await runGit(config)
     })
 
     it("runs pretag hook", async () => {
@@ -188,7 +188,7 @@ describe("runCommit()", () => {
         git: { ...baseConfig.git, tag: true, push: true },
       }
       // When
-      await runCommit(config)
+      await runGit(config)
     })
 
     it("runs prepush hook", async () => {

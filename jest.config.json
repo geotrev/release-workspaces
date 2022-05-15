@@ -4,7 +4,9 @@
   "restoreMocks": true,
   "verbose": true,
   "testMatch": ["<rootDir>/bin/**/__tests__/**/*.spec.js"],
-  "testURL": "http://localhost/",
+  "testEnvironmentOptions": {
+    "url": "http://localhost/"
+  },
   "transform": {
     "\\.js$": "babel-jest"
   },
