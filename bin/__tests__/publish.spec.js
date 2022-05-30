@@ -12,7 +12,7 @@ jest.mock("../helpers/reporter.js", () => ({
   report: jest.fn(),
 }))
 jest.mock("../helpers/rollback.js", () => ({
-  setRollback: jest.fn(),
+  queueRollback: jest.fn(),
 }))
 
 const entry = {

@@ -6,7 +6,7 @@ import { getAddCommand } from "../helpers/commands.js"
 import { cmd, reportCmd } from "../helpers/cmd.js"
 import { runIncrement } from "./increment.js"
 import { runPublish } from "./publish.js"
-import { setRollback } from "../helpers/rollback.js"
+import { queueRollback } from "../helpers/rollback.js"
 import { setRootVersion } from "../helpers/set-root-version.js"
 
 export async function runNpm(config) {
@@ -15,7 +15,7 @@ export async function runNpm(config) {
     npm: { increment, publish },
   } = config
 
-  setRollback(config, {
+  queueRollback(config, {
     type: "increment",
     callback: async () => {
       await cmd("git reset --hard HEAD", config)
@@ -48,6 +48,18 @@ export async function runNpm(config) {
     if (prepublish) {
       await reportCmd(prepublish, { ...config, step: ReportSteps.PREPUBLISH })
     }
+
+    queueRollback(config, {
+      type: "publish",
+      callback: async () => {
+        for (const pkg of config.packages) {
+          await cmd(
+            `npm deprecate ${pkg.name}@${config.releaseVersion}`,
+            config
+          )
+        }
+      },
+    })
 
     await runPublish(config)
 

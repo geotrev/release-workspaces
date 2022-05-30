@@ -2,7 +2,7 @@ import "../../.jest/mocks.js"
 import { ReportSteps } from "../helpers/constants.js"
 import { getCommitCmd, getTagCmd, getPushCmd } from "../helpers/commands.js"
 import { setVersionToString } from "../helpers/transformers.js"
-import { setRollback } from "../helpers/rollback.js"
+import { queueRollback } from "../helpers/rollback.js"
 import { reportCmd } from "../helpers/cmd.js"
 import { runGit } from "../modules/git.js"
 
@@ -12,7 +12,7 @@ jest.mock("../helpers/cmd.js", () => ({
 }))
 
 jest.mock("../helpers/rollback.js", () => ({
-  setRollback: jest.fn(),
+  queueRollback: jest.fn(),
 }))
 
 const baseConfig = {
@@ -91,8 +91,8 @@ describe("runGit()", () => {
       )
     })
 
-    it("calls setRollback", async () => {
-      expect(setRollback).toBeCalledWith(
+    it("calls queueRollback", async () => {
+      expect(queueRollback).toBeCalledWith(
         expect.objectContaining(config),
         expect.objectContaining({
           type: "commit",
@@ -167,8 +167,8 @@ describe("runGit()", () => {
       )
     })
 
-    it("calls setRollback", async () => {
-      expect(setRollback).toBeCalledWith(
+    it("calls queueRollback", async () => {
+      expect(queueRollback).toBeCalledWith(
         expect.objectContaining(config),
         expect.objectContaining({
           type: "tag",

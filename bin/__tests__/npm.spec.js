@@ -4,7 +4,7 @@ import { ReportSteps } from "../helpers/constants.js"
 import { getAddCommand } from "../helpers/commands.js"
 import { report } from "../helpers/reporter.js"
 import { reportCmd, cmd } from "../helpers/cmd.js"
-import { setRollback } from "../helpers/rollback.js"
+import { queueRollback } from "../helpers/rollback.js"
 import { setRootVersion } from "../helpers/set-root-version.js"
 import { runNpm } from "../modules/npm.js"
 import { runIncrement } from "../modules/increment.js"
@@ -21,7 +21,7 @@ jest.mock("../helpers/set-root-version.js", () => ({
   setRootVersion: jest.fn(),
 }))
 jest.mock("../helpers/rollback.js", () => ({
-  setRollback: jest.fn(),
+  queueRollback: jest.fn(),
 }))
 jest.mock("../modules/increment.js", () => ({
   runIncrement: jest.fn(),
@@ -140,10 +140,23 @@ describe("runNpm()", () => {
       // When
       await runNpm(config)
       // Then
-      expect(setRollback).toBeCalledWith(
+      expect(queueRollback).toBeCalledWith(
         expect.objectContaining(config),
         expect.objectContaining({
           type: "increment",
+          callback: expect.any(Function),
+        })
+      )
+    })
+
+    it("adds publish action", async () => {
+      // when
+      await runNpm(config)
+      // Then
+      expect(queueRollback).toBeCalledWith(
+        expect.objectContaining(config),
+        expect.objectContaining({
+          type: "publish",
           callback: expect.any(Function),
         })
       )

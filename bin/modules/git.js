@@ -4,7 +4,7 @@ import { ReportSteps } from "../helpers/constants.js"
 import { getCommitCmd, getTagCmd, getPushCmd } from "../helpers/commands.js"
 import { setVersionToString } from "../helpers/transformers.js"
 import { cmd, reportCmd } from "../helpers/cmd.js"
-import { setRollback } from "../helpers/rollback.js"
+import { queueRollback } from "../helpers/rollback.js"
 
 export async function runGit(config) {
   const {
@@ -31,7 +31,7 @@ export async function runGit(config) {
       step: ReportSteps.COMMIT,
     })
 
-    setRollback(config, {
+    queueRollback(config, {
       type: "commit",
       callback: async () => {
         await cmd("git reset --hard HEAD~1", config)
@@ -52,7 +52,7 @@ export async function runGit(config) {
       await reportCmd(pretag, { ...config, step: ReportSteps.PRETAG })
     }
 
-    setRollback(config, {
+    queueRollback(config, {
       type: "tag",
       callback: async () => {
         await cmd(`git tag --delete v${config.releaseVersion}`, config)

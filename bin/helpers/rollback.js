@@ -30,7 +30,7 @@ export function disableRollback() {
   process.off("exit", rollback)
 }
 
-export function setRollback(config, action) {
+export function queueRollback(config, action) {
   if (config.dryRun) return
   rollbackActions.push(action)
 }
