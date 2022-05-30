@@ -58,9 +58,9 @@ describe("runIncrement()", () => {
 
     it("versions an entry", async () => {
       // Given
-      const command = getVersionCommand(entryOne.name, config.releaseVersion)
+      const command = getVersionCommand(config.releaseVersion)
       // When
-      await runIncrement(config, entryOne)
+      await runIncrement(config)
       // Then
       expect(cmd).toBeCalledWith(command, expect.objectContaining(config), true)
     })
@@ -74,7 +74,7 @@ describe("runIncrement()", () => {
         2
       )
       // When
-      await runIncrement(config, entryOne)
+      await runIncrement(config)
       // Then
       expect(fs.writeFileSync).toBeCalledWith(
         `${entryOne.dir}/package.json`,
@@ -87,16 +87,16 @@ describe("runIncrement()", () => {
       // Given
       const dryConfig = { ...config, dryRun: true }
       // When
-      await runIncrement(dryConfig, entryOne)
+      await runIncrement(dryConfig)
       // Then
       expect(fs.writeFileSync).not.toBeCalled()
     })
 
-    it("does not write to file if there are no matching dependencies", async () => {
+    it("does not write dependency versions when package has no matches", async () => {
       // When
-      await runIncrement(config, entryTwo)
+      await runIncrement(config)
       // Then
-      expect(fs.writeFileSync).not.toBeCalled()
+      expect(fs.writeFileSync).toBeCalledTimes(1)
     })
   })
 
@@ -113,7 +113,7 @@ describe("runIncrement()", () => {
 
     it("exits if write to file fails", async () => {
       // When
-      await runIncrement(config, entryOne)
+      await runIncrement(config)
       // Then
       expect(exitWithError).toBeCalled()
     })
@@ -132,7 +132,7 @@ describe("runIncrement()", () => {
       // Given
       const dryConfig = { ...config, verbose: true, dryRun: true }
       // When
-      await runIncrement(dryConfig, entryOne)
+      await runIncrement(dryConfig)
       // Then
       expect(report).toBeCalledWith(
         expect.objectContaining({
@@ -146,7 +146,7 @@ describe("runIncrement()", () => {
       // Given
       const verbConfig = { ...config, verbose: true }
       // When
-      await runIncrement(verbConfig, entryOne)
+      await runIncrement(verbConfig)
       // Then
       expect(report).toBeCalledWith(
         expect.objectContaining({
@@ -158,11 +158,11 @@ describe("runIncrement()", () => {
 
     it("reports start", async () => {
       // When
-      await runIncrement(config, entryTwo)
+      await runIncrement(config)
       // Then
       expect(report).toBeCalledWith(
         expect.objectContaining({
-          m: `${entryTwo.name} | ${config.prevVersion} -> ${config.releaseVersion}`,
+          m: `Incrementing version: ${config.prevVersion} -> ${config.releaseVersion}`,
           type: "start",
         })
       )
@@ -170,12 +170,12 @@ describe("runIncrement()", () => {
 
     it("reports success", async () => {
       // When
-      await runIncrement(config, entryTwo)
+      await runIncrement(config)
       // Then
       expect(report).toBeCalledWith(
         expect.objectContaining({
           m: {
-            text: `${entryTwo.name} | ${config.prevVersion} -> ${config.releaseVersion}`,
+            text: `Incrementing version: ${config.prevVersion} -> ${config.releaseVersion}`,
             symbol: "📦",
           },
           type: "stopAndPersist",

@@ -11,11 +11,9 @@ import { setRootVersion } from "../helpers/set-root-version.js"
 
 export async function runNpm(config) {
   const {
-    packages,
     hooks: { preincrement, postincrement, prepublish, postpublish },
     npm: { increment, publish },
   } = config
-  const length = packages.length
 
   setRollback(config, {
     type: "increment",
@@ -32,9 +30,7 @@ export async function runNpm(config) {
       })
     }
 
-    for (let i = 0; i < length; i++) {
-      await runIncrement(config, packages[i])
-    }
+    await runIncrement(config)
 
     // Set root version to config/package.json, then stage changes
     await setRootVersion(config)
@@ -53,9 +49,7 @@ export async function runNpm(config) {
       await reportCmd(prepublish, { ...config, step: ReportSteps.PREPUBLISH })
     }
 
-    for (let i = 0; i < length; i++) {
-      await runPublish(config, packages[i])
-    }
+    await runPublish(config)
 
     if (postpublish) {
       await reportCmd(postpublish, { ...config, step: ReportSteps.POSTPUBLISH })

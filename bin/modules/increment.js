@@ -86,22 +86,16 @@ function setDependencies(config, entry) {
   }
 }
 
-export async function runIncrement(config, entry) {
-  const message = `${entry.name} | ${config.prevVersion} -> ${config.releaseVersion}`
+export async function runIncrement(config) {
+  const message = `Incrementing version: ${config.prevVersion} -> ${config.releaseVersion}`
 
-  report({
-    m: message,
-    type: "start",
-  })
+  report({ m: message, type: "start" })
 
-  await cmd(getVersionCommand(entry.name, config.releaseVersion), config, true)
-  setDependencies(config, entry)
+  await cmd(getVersionCommand(config.releaseVersion), config, true)
 
-  report({
-    m: {
-      text: message,
-      symbol: "📦",
-    },
-    type: "stopAndPersist",
-  })
+  for (const entry of config.packages) {
+    setDependencies(config, entry)
+  }
+
+  report({ m: { text: message, symbol: "📦" }, type: "stopAndPersist" })
 }
