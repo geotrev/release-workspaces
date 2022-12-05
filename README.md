@@ -47,6 +47,7 @@ It's therefore _not_ in the perview of this package to interact with behavior be
 
 This tool assumes a few things about your workflow:
 
+- You're [logged into NPM](http://npm.github.io/installation-setup-docs/installing/logging-in-and-out.html) from your terminal environment
 - You're using npm workspaces (npm 7.x)
 - All your packages will use the same version for each release
 
